@@ -9,8 +9,7 @@ def apiCall(address):
 
     unique_tokens = {}
 
-    transactions_in = {}
-    transactions_out = {}
+    token_totals = {}
     
     response = requests.get(url)
     address_content = response.json()
@@ -30,21 +29,21 @@ def apiCall(address):
         unique_tokens[token_symbol] = token_name
         
         if tx_to == address.lower():
-            if tx_to in transactions_in:
+            if tx_to in token_totals:
                 # transactions_in.append((token_symbol, value))
-                transactions_in[token_symbol] += value
+                token_totals[token_symbol] += value
             else:
-                transactions_in[token_symbol] = value
+                token_totals[token_symbol] = value
         else:
             if tx_to in transactions_out:
                 # transactions_out.append((token_symbol, value))
-                transactions_out[token_symbol] += (value * -1)
+                token_totals[token_symbol] += (value * -1)
             else:
-                transactions_out[token_symbol] = (value * -1)
+                token_totals[token_symbol] = (value * -1)
     
-    print(transactions_in, transactions_out)
+    print(token_totals)
 
-    
+
 
 
 def valueApiCall(unique_tokens):
