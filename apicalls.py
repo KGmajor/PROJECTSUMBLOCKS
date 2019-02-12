@@ -2,14 +2,22 @@ import requests
 from decimal import Decimal
 from datetime import datetime
 
+
+
+unique_tokens = {}
+token_totals = {}
+conversion_rates = []
+
+WOW_TOTAL = []
+
 def apiCall(address):
     address = str(address)
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
       "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
 
-    unique_tokens = {}
+    # unique_tokens = {}
 
-    token_totals = {}
+    # token_totals = {}
     
     response = requests.get(url)
     address_content = response.json()
@@ -35,13 +43,11 @@ def apiCall(address):
             else:
                 token_totals[token_symbol] = value
         else:
-            if tx_to in transactions_out:
+            if tx_to in token_totals:
                 # transactions_out.append((token_symbol, value))
                 token_totals[token_symbol] += (value * -1)
             else:
                 token_totals[token_symbol] = (value * -1)
-    
-    print(token_totals)
 
 
 
@@ -50,13 +56,35 @@ def valueApiCall(unique_tokens):
         
         url2 = "http://api.binance.com/api/v3/ticker/price"
         response2 = requests.get(url2)
-        valuecall = response2.json()
-        callresults = valuecall.get("symbol")
-        # for ticker, title in unique_tokens:
+        rate_list = response2.json()
+        
+        for symbol, name in unique_tokens.items():
+            symbol_search_eth = symbol.upper() + 'ETH'
+            symbol_search_btc = symbol.upper() + 'BTC'
+            for rate in rate_list:
+                exchange_coin = rate['symbol']
+                exchange_rate = rate['price']
+                
+                if exchange_coin == symbol_search_eth:
+                    conversion_rates.append({exchange_coin: exchange_rate})
 
-        valueApiCall(unique_tokens)
-        return unique_tokens, callresults
+                else:
+                    pass
 
+def calculate_currency_conversion(token_totals, conversion_rates):
+    for key, value in conversion_rates:
+        print(key, value)
+    # for key, value in token_totals.items():
+    #     if coin == key:
+    #         grand_total = price * value
+    #         WOW_TOTAL.append(grand_total)
+    #     else:
+    #         pass
+    # print(WOW_TOTAL)
+
+apiCall('0x71C7656EC7ab88b098defB751B7401B5f6d8976F')
+valueApiCall(unique_tokens)
+calculate_currency_conversion(token_totals, conversion_rates)
 
 
 
