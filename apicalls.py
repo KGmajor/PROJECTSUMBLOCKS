@@ -10,19 +10,16 @@ conversion_rates = []
 
 WOW_TOTAL = []
 
-def apiCall(address):
+def api_call(address):
     address = str(address)
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
       "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
 
-    # unique_tokens = {}
-
-    # token_totals = {}
     
     response = requests.get(url)
     address_content = response.json()
     result = address_content.get("result")
-    print(address)
+    print(address, result)
     for transaction in result:
         hash = transaction.get("hash")
         tx_from = transaction.get("from")
@@ -71,20 +68,21 @@ def valueApiCall(unique_tokens):
                 else:
                     pass
 
-def calculate_currency_conversion(token_totals, conversion_rates):
-    for key, value in conversion_rates:
-        print(key, value)
-    # for key, value in token_totals.items():
-    #     if coin == key:
-    #         grand_total = price * value
-    #         WOW_TOTAL.append(grand_total)
-    #     else:
-    #         pass
-    # print(WOW_TOTAL)
+# def calculate_currency_conversion(token_totals, conversion_rates):
+#     # for dict in conversion_rates:
+#     #     for coin, rate in dict.items():
+#     #         if coin[:-3] == token_totals.keys():
+#     #             total = float(rate) * float(amount)
+#     #             WOW_TOTAL.append(total)
+        
+#     #         else:
+#     #             pass
+#     pass
 
-apiCall('0x71C7656EC7ab88b098defB751B7401B5f6d8976F')
-valueApiCall(unique_tokens)
-calculate_currency_conversion(token_totals, conversion_rates)
+# # print(WOW_TOTAL)
+# apiCall('0x71C7656EC7ab88b098defB751B7401B5f6d8976F')
+# valueApiCall(unique_tokens)
+# calculate_currency_conversion(token_totals, conversion_rates)
 
 
 

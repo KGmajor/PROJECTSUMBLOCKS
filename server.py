@@ -4,6 +4,7 @@ from flask import (Flask, render_template, redirect, request, flash, session)
 from flask_debugtoolbar import DebugToolbarExtension
 import requests
 from datetime import datetime
+from apicalls import *
 
 app = Flask(__name__)
 
@@ -18,45 +19,17 @@ def index():
     return render_template("homepage.html")
 
 @app.route('/wallet-processing', methods=['GET'])
+def wall_processing():
     # """Handling the wallet address input"""
-def apiCall():
+    address = request.args.get('wallet_id')
+    print('****************', address, type(address))
 
-    address = "0xbDd7e376B30D48af9ae89B26662328c7cfD1f5C9"
-    url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
-      "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
-    unique_tokens = {}
-    response = requests.get(url)
- 
-    address_content = response.json()
-    results = address_content.get("result")
+    api_call(address)
+    valueApiCall(unique_tokens)
 
-    for transaction in results:
-        hash = transaction.get("hash")
-        tx_from = transaction.get("from")
-        tx_to = transaction.get("to")
-        value = transaction.get("value")
-        token_name = transaction.get("tokenName")
-        token_symbol = transaction.get("tokenSymbol")
-        confirmations = transaction.get("confirmations")
-        epc_time = int(transaction.get("timeStamp"))
-        date = datetime.utcfromtimestamp(epc_time)
-        unique_tokens[token_symbol] = token_name
-        print(token_name)
-    print(unique_tokens)
+    return render_template("results.html", unique_tokens=unique_tokens, token_totals=token_totals, conversion_rates=conversion_rates)
 
-    def valueApiCall(unique_tokens):
-        
-        url2 = "http://api.binance.com/api/v3/ticker/price"
-        response2 = requests.get(url2)
-        valuecall = response2.json()
-        callresults = valuecall.get("symbol")
-        # for ticker, title in unique_tokens:
-
-
-        return render_template("results.html", results=results, callresults=callresults)
-
-
-
+    
 
 if __name__ == "__main__":
     app.debug = True
@@ -65,4 +38,4 @@ if __name__ == "__main__":
 
     DebugToolbarExtension(app)
 
-    app.run(port=4000, host='0.0.0.0')
+    app.run(port=5000, host='0.0.0.0')
