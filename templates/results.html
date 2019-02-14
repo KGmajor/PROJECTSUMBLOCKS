@@ -27,7 +27,10 @@
             <div class="col-sm">
                 <h2> Token Totals </h2>
             <ol>
-            {% for k, v in token_totals.items()%}
+            {% for k, v in btc_token_totals.items() %}
+                <li>{{k, v}}
+            {% endfor %}
+            {% for k, v in eth_token_totals.items() %}
                 <li>{{k, v}}</li>
             {% endfor %}
             </ol>

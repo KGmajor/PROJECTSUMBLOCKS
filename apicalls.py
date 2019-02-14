@@ -6,7 +6,7 @@ from datetime import datetime
 
 unique_tokens = {}
 eth_token_totals = {}
-btc_token_totals = {}
+btc_token_totals = {'BTC': 0}
 conversion_rates = {}
 
 WOW_TOTAL = []
@@ -35,17 +35,17 @@ def erc20_api_call(address):
         unique_tokens[token_symbol] = token_name
         
         if tx_to == address.lower():
-            if tx_to in token_totals:
+            if tx_to in eth_token_totals:
                 # transactions_in.append((token_symbol, value))
-                token_totals[token_symbol] += value
+                eth_token_totals[token_symbol] += value
             else:
-                token_totals[token_symbol] = value
+                eth_token_totals[token_symbol] = value
         else:
-            if tx_to in token_totals:
+            if tx_to in eth_token_totals:
                 # transactions_out.append((token_symbol, value))
-                token_totals[token_symbol] += (value * -1)
+                eth_token_totals[token_symbol] += (value * -1)
             else:
-                token_totals[token_symbol] = (value * -1)
+                eth_token_totals[token_symbol] = (value * -1)
 
 
 def btc_api_call(address):
@@ -54,20 +54,16 @@ def btc_api_call(address):
 
     response = requests.get(url)
     btc_content = response.json()
-    data = btc_content.get("data")
 
-    for address_info in data:
-        received = transaction.get("total_received")
-        sent = transaction.get("total_sent")
-        balance = int(transaction.get("balance"))
-        unconfirmed_tx = transaction.get("unconfirmed_n_tx")
+    received = btc_content.get("total_received")
+    sent = btc_content.get("total_sent")
+    balance = int(btc_content.get("balance"))
+    unconfirmed_tx = btc_content.get("unconfirmed_n_tx")
 
     unique_tokens['BTC'] = 'Bitcoin'
 
-    if balance in btc_token_totals:
-                btc_token_totals['btc'] += balance
-            else:
-                token_totals['btc'] = balance
+    btc_token_totals['BTC'] += balance
+    
 
 
 def valueApiCall(unique_tokens):
@@ -78,12 +74,12 @@ def valueApiCall(unique_tokens):
         
         for symbol, name in unique_tokens.items():
             symbol_search_eth = symbol.upper() + 'ETH'
-            symbol_search_btc = symbol.upper() + 'BTC'
+            symbol_search_btc = symbol.upper() + 'USD'
             for rate in rate_list:
                 exchange_coin = rate['symbol']
                 exchange_rate = rate['price']
                 
-                if exchange_coin == symbol_search_eth:
+                if exchange_coin == symbol_search_eth or exchange_coin == symbol_search_btc:
                     conversion_rates[exchange_coin] = exchange_rate
 
                 else:
