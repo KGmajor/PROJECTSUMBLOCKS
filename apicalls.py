@@ -1,12 +1,13 @@
 import requests
 from decimal import Decimal
 from datetime import datetime
+from collections import defaultdict
 
 
 
 unique_tokens = {}
 eth_token_totals = {}
-btc_token_totals = {'BTC': 0}
+btc_token_totals = defaultdict(lambda : 0)
 conversion_rates = {}
 
 WOW_TOTAL = []
