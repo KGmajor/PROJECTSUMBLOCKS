@@ -16,19 +16,31 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+    session.clear()
+    unique_tokens.clear()
+    token_totals.clear()
+    conversion_rates.clear()
     return render_template("homepage.html")
 
 @app.route('/wallet-processing', methods=['GET'])
 def wall_processing():
     # """Handling the wallet address input"""
     address = request.args.get('wallet_id')
-    print('****************', address, type(address))
+    session['in_session'] = True
+    session[address] = 1
 
-    api_call(address)
-    valueApiCall(unique_tokens)
+    if session['in_session'] == True:
+        api_call(address)
+        valueApiCall(unique_tokens)
+        flash("Wallet " + address + " was added, please add another or hit finished.")
+        return render_template("results.html", unique_tokens=unique_tokens, token_totals=token_totals, conversion_rates=conversion_rates)
 
-    return render_template("results.html", unique_tokens=unique_tokens, token_totals=token_totals, conversion_rates=conversion_rates)
-
+    else:
+        # unique_tokens.clear()
+        # token_totals.clear()
+        # conversion_rates.clear()
+        # return render_template("homepage.html")
+        pass
     
 
 if __name__ == "__main__":

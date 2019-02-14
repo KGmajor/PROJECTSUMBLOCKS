@@ -1,22 +1,20 @@
-<!DOCTYPE html>
-
-<html>
+{% extends 'base.html' %}
+{% block content %}
     <head>
         <title>Oh wow a website!</title>
     </head>
     <body>
-      
-        <form action="/wallet-processing" method="GET">
-      Wallet *Address : <input type="text" name = "wallet_id"><br>
-      <br>
-      Alias(optional) : <input type="text" name = "alias"><br>
-      <input type="submit" value="Submit">
+      <div class="container">
+        <div class="row">
+          <div id="wallet_add">
+            <div>
+              <span><form action="/wallet-processing" method="GET">
+                Wallet Address : <input type="text" name = "wallet_id">
+                Alias(optional) : <input type="text" name = "alias">
+                <input type="submit" value="Add wallet">
+                </form></span>
+        </div>
+  </div>
 
 
-
-
-    </body>
-
-
-
-</html>
+{% endblock %}

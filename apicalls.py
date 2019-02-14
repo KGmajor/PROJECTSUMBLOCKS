@@ -5,12 +5,13 @@ from datetime import datetime
 
 
 unique_tokens = {}
-token_totals = {}
-conversion_rates = []
+eth_token_totals = {}
+btc_token_totals = {}
+conversion_rates = {}
 
 WOW_TOTAL = []
 
-def api_call(address):
+def erc20_api_call(address):
     address = str(address)
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
       "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
@@ -47,6 +48,26 @@ def api_call(address):
                 token_totals[token_symbol] = (value * -1)
 
 
+def btc_api_call(address):
+    address = str(address)
+    url = "https://api.blockcypher.com/v1/btc/main/addrs/" + address +"/full?limit=50?unspentOnly=true&includeScript=true"
+
+    response = requests.get(url)
+    btc_content = response.json()
+    data = btc_content.get("data")
+
+    for address_info in data:
+        received = transaction.get("total_received")
+        sent = transaction.get("total_sent")
+        balance = int(transaction.get("balance"))
+        unconfirmed_tx = transaction.get("unconfirmed_n_tx")
+
+    unique_tokens['BTC'] = 'Bitcoin'
+
+    if balance in btc_token_totals:
+                btc_token_totals['btc'] += balance
+            else:
+                token_totals['btc'] = balance
 
 
 def valueApiCall(unique_tokens):
@@ -63,7 +84,7 @@ def valueApiCall(unique_tokens):
                 exchange_rate = rate['price']
                 
                 if exchange_coin == symbol_search_eth:
-                    conversion_rates.append({exchange_coin: exchange_rate})
+                    conversion_rates[exchange_coin] = exchange_rate
 
                 else:
                     pass
