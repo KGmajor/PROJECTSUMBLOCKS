@@ -21,21 +21,26 @@ def index():
     eth_token_totals.clear()
     btc_token_totals.clear()
     conversion_rates.clear()
+
     return render_template("homepage.html")
 
 @app.route('/wallet-processing', methods=['GET'])
 def wall_processing():
     # """Handling the wallet address input"""
     address = request.args.get('wallet_id')
-    session['in_session'] = True
-    session[address] = 1
-    if address[0] == '0':
-        erc20_api_call(address)
+
+    if address not in session:
+        session[address] = 1
+        if address[0] == '0':
+            erc20_api_call(address)
+        else:
+            btc_api_call(address)
+
+        flash("Wallet " + address + " was added, please add another or hit finished.", 'message')
+        valueApiCall(unique_tokens)
     else:
-        btc_api_call(address)
-    
-    valueApiCall(unique_tokens)
-    flash("Wallet " + address + " was added, please add another or hit finished.")
+        flash("You have already added that address.", 'error')
+
     return render_template("results.html", unique_tokens=unique_tokens, eth_token_totals=eth_token_totals, btc_token_totals=btc_token_totals, conversion_rates=conversion_rates)
 
     

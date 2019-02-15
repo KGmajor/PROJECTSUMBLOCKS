@@ -1,21 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container">
+<div class="container-fluid">
         <div class="row">
-            <div class="col-sm">
+            <div class="mr-4">
               <form action="/wallet-processing" method="GET">
             Wallet Address : <input type="text" name = "wallet_id">
             Alias(optional) : <input type="text" name = "alias">
             <input type="submit" value="Add wallet"><br>
             </form>
-            <br>
-            <br>
+            </div>
+            <div>
             <form action="/">
                 <input type="submit" value="I'm finished" />
             </form>
             </div>
-
+        </div>
+</div>
+    <div class="container-fluid mt-6">
+        <div class="row">
+            <div class="col-sm">
+                <h2> Wallets Added </h2>
+                <ol>
+                    {% for key in session.keys() %}
+                       <li> {{key}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
             <div class="col-sm">
                 <h2> Unique Tokens </h2>
             <ol>
@@ -41,10 +52,10 @@
             {% for k, v in conversion_rates.items() %}
             <li>{{k, v}}</li>
             {% endfor %}
-            
             </ol>
             </div>
         </div>
     </div>
+
 
 {% endblock %}
