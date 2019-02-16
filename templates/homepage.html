@@ -8,13 +8,34 @@
         <div class="row">
           <div id="wallet_add">
             <div>
-              <span><form action="/wallet-processing" method="GET">
-                Wallet Address : <input type="text" name = "wallet_id">
-                Alias(optional) : <input type="text" name = "alias">
+              <span><form action="/wallet-processing" method="GET" id="wallet">
+                Wallet Address : <input type="text" id="wallet_id">
+                Alias(optional) : <input type="text" id="alias">
                 <input type="submit" value="Add wallet">
                 </form></span>
+
         </div>
   </div>
+        <div class="row">
+          <span id="show-results"></span>
+<script>
+  function handleFormSubmission () {
+    $('#wallet').on('submit', (evt) => {
+      evt.preventDefault();
+      console.log('Event cancelled');
 
+      let walletId = document.getElementById("wallet_id").value;
+      let alias = document.getElementById("alias").value;
+      console.log(walletId);
+    
+    $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
+    console.log(response);
+    
+      });
+    });
+  }
+
+  handleFormSubmission();
+</script>
 
 {% endblock %}

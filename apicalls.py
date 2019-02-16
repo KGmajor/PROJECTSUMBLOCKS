@@ -5,10 +5,10 @@ from collections import defaultdict
 
 
 
-unique_tokens = {}
-eth_token_totals = {}
+unique_tokens = defaultdict(lambda : 0)
+eth_token_totals = defaultdict(lambda : 0)
 btc_token_totals = defaultdict(lambda : 0)
-conversion_rates = {}
+conversion_rates = defaultdict(lambda : 0)
 
 WOW_TOTAL = []
 
@@ -21,7 +21,7 @@ def erc20_api_call(address):
     response = requests.get(url)
     address_content = response.json()
     result = address_content.get("result")
-    print(address, result)
+    print(address, "**************************************************")
     for transaction in result:
         hash = transaction.get("hash")
         tx_from = transaction.get("from")
@@ -36,17 +36,10 @@ def erc20_api_call(address):
         unique_tokens[token_symbol] = token_name
         
         if tx_to == address.lower():
-            if tx_to in eth_token_totals:
-                # transactions_in.append((token_symbol, value))
-                eth_token_totals[token_symbol] += value
-            else:
-                eth_token_totals[token_symbol] = value
+            eth_token_totals[token_symbol] += value
         else:
-            if tx_to in eth_token_totals:
-                # transactions_out.append((token_symbol, value))
-                eth_token_totals[token_symbol] += (value * -1)
-            else:
-                eth_token_totals[token_symbol] = (value * -1)
+            eth_token_totals[token_symbol] += (value * -1)
+            
 
 
 def btc_api_call(address):
@@ -86,21 +79,7 @@ def valueApiCall(unique_tokens):
                 else:
                     pass
 
-# def calculate_currency_conversion(token_totals, conversion_rates):
-#     # for dict in conversion_rates:
-#     #     for coin, rate in dict.items():
-#     #         if coin[:-3] == token_totals.keys():
-#     #             total = float(rate) * float(amount)
-#     #             WOW_TOTAL.append(total)
-        
-#     #         else:
-#     #             pass
-#     pass
 
-# # print(WOW_TOTAL)
-# apiCall('0x71C7656EC7ab88b098defB751B7401B5f6d8976F')
-# valueApiCall(unique_tokens)
-# calculate_currency_conversion(token_totals, conversion_rates)
 
 
 
