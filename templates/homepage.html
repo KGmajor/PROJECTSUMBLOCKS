@@ -17,7 +17,7 @@
         </div>
   </div>
         <div class="row">
-          <span id="show-results"></span>
+          <span id="show-results"><p></p></span>
 <script>
   function handleFormSubmission () {
     $('#wallet').on('submit', (evt) => {
@@ -29,10 +29,19 @@
       console.log(walletId);
     
     $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
-    console.log(response);
-    
+      const results = response;
+      console.log(results);
+      handleJsonResponse(results);
       });
     });
+  }
+  function handleJsonResponse (results) {
+    for (const [key, value] of Object.entries(results)) {
+      console.log(key, value);
+      for (const [innerKey, innerValue] of Object.entries(value)){
+        console.log(innerKey, innerValue);
+      };
+    };
   }
 
   handleFormSubmission();
