@@ -36,10 +36,11 @@
     });
   }
   function handleJsonResponse (results) {
-    for (const [key, value] of Object.entries(results)) {
+    for (let [key, value] of Object.entries(results)) {
       console.log(key, value);
-      for (const [innerKey, innerValue] of Object.entries(value)){
-        console.log(innerKey, innerValue);
+      for (let [innerKey, innerValue] of Object.entries(value)){
+        console.log(innerKey, innerValue)
+        $('#show-results').html('please work ' + innerKey + innerValue)
       };
     };
   }
