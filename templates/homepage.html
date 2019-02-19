@@ -1,51 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-    <head>
-        <title>Oh wow a website!</title>
-    </head>
-    <body>
-      <div class="container">
-        <div class="row">
-          <div id="wallet_add">
-            <div>
-              <span><form action="/wallet-processing" method="GET" id="wallet">
-                Wallet Address : <input type="text" id="wallet_id">
-                Alias(optional) : <input type="text" id="alias">
-                <input type="submit" value="Add wallet">
-                </form></span>
 
+      <div class="container-fluid">
+        <div id="wallet_add">
+          <div>
+            <form action="/wallet-processing" method="GET" id="wallet_add">
+              Wallet Address : <input type="text" id="wallet_id">
+              Alias(optional) : <input type="text" id="alias">
+              <input type="submit" value="Add wallet">
+              </form>
+              <form action="/">
+                <input type="submit" value="I'm finished" />
+            </form>
+          </div>
         </div>
-  </div>
+      </div>
+      <div class="container-fluid mt-6 d-none" id="results_table">
         <div class="row">
-          <span id="show-results"><p></p></span>
-<script>
-  function handleFormSubmission () {
-    $('#wallet').on('submit', (evt) => {
-      evt.preventDefault();
-      console.log('Event cancelled');
-
-      let walletId = document.getElementById("wallet_id").value;
-      let alias = document.getElementById("alias").value;
-      console.log(walletId);
+            <div class="col-sm">
+                <h2> Wallets Added </h2>
+                <ol id="wallet_list"></ol>
+            </div>
+            <div class="col-sm">
+                <h2> Unique Tokens </h2>
+            <ol>
+          
+                <li>hi</li>
+            
+            </ol>
+            </div>
+            <div class="col-sm">
+                <h2> Token Totals </h2>
+            <ol>
+            
+                <li>cool</li>
+          
+  
+            </ol>
+            </div>
+            <div class="col-sm">
+                <h2> Conversion Rates </h2>
+            <ol>
+            
+            <li>yes</li>
+            
+            </ol>
+            </div>
+        </div>
+    </div>
     
-    $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
-      const results = response;
-      console.log(results);
-      handleJsonResponse(results);
-      });
-    });
-  }
-  function handleJsonResponse (results) {
-    for (let [key, value] of Object.entries(results)) {
-      console.log(key, value);
-      for (let [innerKey, innerValue] of Object.entries(value)){
-        console.log(innerKey, innerValue)
-        $('#show-results').html('please work ' + innerKey + innerValue)
-      };
-    };
-  }
-
-  handleFormSubmission();
-</script>
 
 {% endblock %}

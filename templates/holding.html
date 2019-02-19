@@ -1,0 +1,31 @@
+<div class="row">
+          <span id="show-results"><p></p></span>
+<script>
+  function handleFormSubmission () {
+    $('#wallet').on('submit', (evt) => {
+      evt.preventDefault();
+      console.log('Event cancelled');
+
+      let walletId = document.getElementById("wallet_id").value;
+      let alias = document.getElementById("alias").value;
+      console.log(walletId);
+    
+    $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
+      const results = response;
+      console.log(results);
+      handleJsonResponse(results);
+      });
+    });
+  }
+  function handleJsonResponse (results) {
+    for (let [key, value] of Object.entries(results)) {
+      console.log(key, value);
+      for (let [innerKey, innerValue] of Object.entries(value)){
+        console.log(innerKey, innerValue)
+        $('#show-results').html('please work ' + innerKey + innerValue)
+      };
+    };
+  }
+
+  handleFormSubmission();
+</script>

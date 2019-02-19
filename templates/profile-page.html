@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% if session['logged_in'] == True %}
+    <a href="/profile-page/{{session['userid']}}" id="userpage">My Profile</a>
+    <a href="/logout" id="loggedout" tabindex="-1">Log Out</a>
+    <script>document.getElementById("logged").style.display = 'none';</script>
+    <script>document.getElementById("registration").style.display = 'none';</script>
+  {% endif %}
+   <hr>
+<div class="container">
+  <h2>Welcome {{username}} !</h2>
+  Email: {{email}}
+</div>
+<hr>
+<div class="container">
+  <h3>Recently Entered Wallets</h3>
+
+  <ol>
+  {% for address, v in session.items() %}
+    {% if v == 'wallet' %}
+      <li>{{address}}</li>
+      <button type="button" class="btn btn-success">Keep</button>
+      <button type="button" class="btn btn-danger">Delete</button>
+    {% endif %}
+  {% endfor %}
+  </ol>
+
+{% endblock %}
