@@ -3,6 +3,9 @@
 
       <div class="container-fluid">
         <div id="wallet_add">
+          <div class="alert alert-danger d-none" role="alert" id="error_alert">
+            <strong>Oh snap!</strong>You already entered that address!
+          </div>
           <div>
             <form action="/wallet-processing" method="GET" id="wallet_add">
               Wallet Address : <input type="text" id="wallet_id">
@@ -15,37 +18,13 @@
           </div>
         </div>
       </div>
-      <div class="container-fluid mt-6 d-none" id="results_table">
+      <div class="container-fluid mt-6 d-none" id="wallets_table">
         <div class="row">
             <div class="col-sm">
                 <h2> Wallets Added </h2>
                 <ol id="wallet_list"></ol>
             </div>
-            <div class="col-sm">
-                <h2> Unique Tokens </h2>
-            <ol>
-          
-                <li>hi</li>
-            
-            </ol>
-            </div>
-            <div class="col-sm">
-                <h2> Token Totals </h2>
-            <ol>
-            
-                <li>cool</li>
-          
-  
-            </ol>
-            </div>
-            <div class="col-sm">
-                <h2> Conversion Rates </h2>
-            <ol>
-            
-            <li>yes</li>
-            
-            </ol>
-            </div>
+
         </div>
     </div>
     
