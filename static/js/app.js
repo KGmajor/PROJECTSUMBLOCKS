@@ -4,8 +4,7 @@ const enteredWallets = []
   function handleFormSubmission () {
     $('#wallet_add').on('submit', (evt) => {
       evt.preventDefault();
-      // console.log('Event cancelled');
-      // const enteredWallets = []
+      
       let walletId = document.getElementById("wallet_id").value;
       let alias = document.getElementById("alias").value;
 

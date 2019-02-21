@@ -9,6 +9,7 @@ from datetime import datetime
 from collections import defaultdict
 from apicalls import *
 from model import *
+from helpers import *
 
 
 app = Flask(__name__)
@@ -19,11 +20,18 @@ app.secret_key = "COOLSECRETKEY"
 app.jinja_env.undefined = StrictUndefined
 
 
+
 @app.route('/')
 def index():
     """Homepage."""
+    mains = btc_eth_toUSD()
     
-    return render_template("homepage.html")
+    return render_template("homepage.html", mains=mains)
+
+@app.route('/wallets')
+def hold_wallets():
+
+    pass
 
 
 @app.route('/wallet-processing.json', methods=['GET'])
@@ -34,21 +42,30 @@ def wall_processing_json():
     
     session[address] = 1
     session.modified = True
+
+    mains = btc_eth_toUSD()
+
     all_rates = defaultdict(lambda : 0)
     
     if address[0] == '0':
-        eth_coins = erc20_api_call(address)
+        eth_coins = erc20_address_call(address)
         rates = erc20_value_search(eth_coins)
+
+        converted = eth_coin_conversion(eth_coins, rates)
+
 
         return jsonify(
             wallets=[address],
             eth_coins=eth_coins,
-            rates=rates)
+            rates=rates,
+            converted=converted,
+            mains=mains)
     else:
-        btc_coins = btc_api_call(address)
+        btc_coins = btc_address_call(address)
         return jsonify(
             wallets=[address],
-            btc_coins=btc_coins)
+            btc_coins=btc_coins,
+            mains=mains)
 
 
 

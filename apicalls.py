@@ -4,7 +4,7 @@ from datetime import datetime
 from collections import defaultdict
 
 
-def erc20_api_call(address):
+def erc20_address_call(address):
     address = str(address)
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
       "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
@@ -19,36 +19,37 @@ def erc20_api_call(address):
         tx_from = transaction.get("from")
         tx_to = transaction.get("to")
         value = int(transaction.get("value"))
+        decimals = int(transaction.get("tokenDecimal"))
         token_name = transaction.get("tokenName")
         token_symbol = transaction.get("tokenSymbol")
         confirmations = transaction.get("confirmations")
         epc_time = int(transaction.get("timeStamp"))
         date = datetime.utcfromtimestamp(epc_time)
 
+        real_value = value * 10 ** (decimals * -1)
+        
         
         if tx_to == address.lower():
-            eth_token_totals[token_symbol] += value
+            eth_token_totals[token_symbol] += real_value
         else:
-            eth_token_totals[token_symbol] += (value * -1)
-
+            eth_token_totals[token_symbol] += (real_value * -1)
+    print(eth_token_totals)
     return eth_token_totals
             
 
 
-def btc_api_call(address):
+def btc_address_call(address):
     address = str(address)
-    url = "https://api.blockcypher.com/v1/btc/main/addrs/" + address +"/full?limit=50?unspentOnly=true&includeScript=true"
+    url = "https://blockchain.info/q/addressbalance/" + address 
     btc_token_totals = defaultdict(lambda : 0)
     response = requests.get(url)
-    btc_content = response.json()
+    btc_balance = response.json()
+    
+    btc_decimal = int(btc_balance) * 10 **(-8)
+    
 
-    received = btc_content.get("total_received")
-    sent = btc_content.get("total_sent")
-    balance = int(btc_content.get("balance"))
-    unconfirmed_tx = btc_content.get("unconfirmed_n_tx")
-
-    btc_token_totals['BTC'] += balance
-
+    btc_token_totals['BTC'] += float(btc_decimal)
+    print(btc_token_totals)
     return btc_token_totals
     
 
@@ -69,6 +70,19 @@ def erc20_value_search(coins):
                         pass
         
         return pair_conversions
+
+def btc_eth_toUSD():
+
+    url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD&api_key=" + "4a287e7f341e57e9a3da07da6de1e54bdd9e635f494cef0ed8fd61a789eec70a"
+    response = requests.get(url)
+    btceth_usd = response.json()
+
+    return btceth_usd
+
+
+def all_coin_exchange_rate(tokens):
+    pass
+
 
 
 
