@@ -9,6 +9,7 @@ def erc20_address_call(address):
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
       "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
     eth_token_totals = defaultdict(lambda : 0)
+    positive_count_eth = defaultdict(lambda : 0)
     
     response = requests.get(url)
     address_content = response.json()
@@ -33,8 +34,13 @@ def erc20_address_call(address):
             eth_token_totals[token_symbol] += real_value
         else:
             eth_token_totals[token_symbol] += (real_value * -1)
+
+    for k, v in eth_token_totals.items():
+        if v >= 0:
+            positive_count_eth[k] += v
+
     print(eth_token_totals)
-    return eth_token_totals
+    return positive_count_eth
             
 
 
