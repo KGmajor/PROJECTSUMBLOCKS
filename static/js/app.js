@@ -1,5 +1,6 @@
 
 const enteredWallets = []
+let runningSum = 0;
 
   function handleFormSubmission () {
     $('#wallet_add').on('submit', (evt) => {
@@ -30,64 +31,62 @@ const enteredWallets = []
         };
     })
   }
+  
   function handleJsonResponse (results) {
     const wallets = results.wallets;
     const ethCoins = results.eth_coins;
     const coinsToConvert = results.eth_coins;
-    const rates = results.rates;
+    const btcCoins = results.btc_coins;
     const mains = results.mains;
 
-    handleCoins(ethCoins);
     handleWallets(wallets);
-    handleConversion(coinsToConvert, rates)
     
-    function handleCoins (ethCoins) {
+    if (wallets[0][0] === '0') {
+    handleETHCoins(ethCoins);
+  }
+      else {
+      handleBTCCoins(btcCoins);
+    }
+
+    function handleETHCoins (ethCoins) {
       if (ethCoins.length === 0) return;
-      const coinListEl = document.getElementById('coins_list');
-      Object.keys(ethCoins).forEach((coin) => {
-        const li = document.createElement('li');
-        li.textContent = coin;
-        coinListEl.appendChild(li);
+      Object.entries(ethCoins).forEach(entry => {
+        let coinName = entry[0];
+        let coinCount = entry[1];
+        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD', function(data){
+        console.log(data.USD);
+        if (data.USD != null){
+          let usdRate = data.USD;
+          let coinSum = coinCount * usdRate;
+          runningSum += coinSum;
+          const coinListEl = document.getElementById('coins_list');
+          const li = document.createElement('li');
+          li.textContent = [coinName+' $'+coinSum.toFixed(2)];
+          coinListEl.appendChild(li);
+          }
+        }); 
       });
     }
 
-    function handleConversion (coinsToConvert, rates) {
-      if (coinsToConvert.length === 0) return;
-      const conversionEl = document.getElementById('wallet_conversion');
-      Object.entries(coinsToConvert).forEach(entry => {
-        let coinPair = (entry[0] + "ETH");
-        let coinCount = entry[1]
-        Object.entries(rates).forEach(values => {
-          let pair = values[0];
-          let rate = values[1];
-
-          if (coinPair === pair) {
-            let converted = coinCount * rate
-
-            const li = document.createElement('li');
-            li.textContent = [coinPair+' '+converted];
-            conversionEl.appendChild(li);
-          };
-        });
+    function handleBTCCoins (btcCoins) {
+      Object.entries(btcCoins).forEach(entry => {
+        let coinName = entry[0];
+        let coinCount = entry[1];
+        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD', function(data){
+        console.log(data.USD);
+        if (data.USD != null){
+          let usdRate = data.USD;
+          let coinSum = coinCount * usdRate;
+          runningSum += coinSum;
+          const coinListEl = document.getElementById('coins_list');
+          const li = document.createElement('li');
+          li.textContent = [coinName+' $'+coinSum.toFixed(2)];
+          coinListEl.appendChild(li);
+          }
+        }); 
       });
-      //   function handleConversionToMain (converted, mains) {
-      //   if (converted.length === 0) return;
-      //   Object.entries(mains).forEach((main => {
-      //     let btc = main[0];
-      //     let eth = main[1];
-      //   });
-      //   let btcUsd = btc.USD;
-      //   let ethUsd = btc.USD;
-
-      //   if 
-
-      //     const convertoToMainEl = document.getElementById('convert_to_main');
-      //     const li = document.createElement('li');
-      //     li.textContent = coin;
-      //     coinListEl.appendChild(li);
-      // }
-    };
-
+    }
+    
     function handleWallets (wallets) {
       if (wallets.length === 0) return;
       const walletListEl = document.getElementById('wallet_list');
@@ -101,5 +100,13 @@ const enteredWallets = []
       });
     };
   }
+    function runTotals (runningSum) {
+      const runningSumEl = document.getElementById('running_sum');
+      const li = document.createElement('li');
+      li.textContent = runningSum;
+      runningSumEl.appendChild(li);
+    };
 
   handleFormSubmission();
+  runTotals (runningSum);
+  

@@ -2,12 +2,15 @@ import requests
 from decimal import Decimal
 from datetime import datetime
 from collections import defaultdict
+import os
 
+CRYPTOCOMPARE_KEY = os.environ["CRYPTOCOMPARE_KEY"]
+ETHERSCAN_KEY = os.environ["ETHERSCAN_KEY"]
 
 def erc20_address_call(address):
     address = str(address)
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
-      "&startblock=0&endblock=999999999&sort=asc&apikey=F8955887E7AK464IWN8QEM35RE16YR4X4A"
+      "&startblock=0&endblock=999999999&sort=asc&apikey=" + ETHERSCAN_KEY
     eth_token_totals = defaultdict(lambda : 0)
     positive_count_eth = defaultdict(lambda : 0)
     
@@ -79,7 +82,7 @@ def erc20_value_search(coins):
 
 def btc_eth_toUSD():
 
-    url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD&api_key=" + "4a287e7f341e57e9a3da07da6de1e54bdd9e635f494cef0ed8fd61a789eec70a"
+    url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD&api_key=" + CRYPTOCOMPARE_KEY
     response = requests.get(url)
     btceth_usd = response.json()
 
