@@ -1,6 +1,18 @@
 
 const enteredWallets = []
-let runningSum = 0;
+let runningUSDSum = 0;
+let runningBTCSum = 0;
+let runningEURSum = 0;
+
+Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
+    dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
+    thousands_sep = typeof thousands_sep !== 'undefined' ? thousands_sep : ',';
+
+    var parts = this.toFixed(decimals).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_sep);
+
+    return parts.join(dec_point);
+}
 
   function handleFormSubmission () {
     $('#wallet_add').on('submit', (evt) => {
@@ -18,7 +30,7 @@ let runningSum = 0;
           enteredWallets.push(walletId);
           const errorMessage = document.getElementById('error_alert');
           errorMessage.classList.add("d-none");
-          $.get('/wallets?wallet_id=' + walletId + '?alias=' + alias);
+          // $.get('/wallets?wallet_id=' + walletId + '?alias=' + alias);
           $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
             const results = response;
             console.log("Results", results);
@@ -53,17 +65,9 @@ let runningSum = 0;
       Object.entries(ethCoins).forEach(entry => {
         let coinName = entry[0];
         let coinCount = entry[1];
-        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD', function(data){
+        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
         console.log(data.USD);
-        if (data.USD != null){
-          let usdRate = data.USD;
-          let coinSum = coinCount * usdRate;
-          runningSum += coinSum;
-          const coinListEl = document.getElementById('coins_list');
-          const li = document.createElement('li');
-          li.textContent = [coinName+' $'+coinSum.toFixed(2)];
-          coinListEl.appendChild(li);
-          }
+        currencyExchange(coinName, coinCount, data);
         }); 
       });
     }
@@ -72,17 +76,13 @@ let runningSum = 0;
       Object.entries(btcCoins).forEach(entry => {
         let coinName = entry[0];
         let coinCount = entry[1];
-        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD', function(data){
+        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
         console.log(data.USD);
-        if (data.USD != null){
-          let usdRate = data.USD;
-          let coinSum = coinCount * usdRate;
-          runningSum += coinSum;
-          const coinListEl = document.getElementById('coins_list');
-          const li = document.createElement('li');
-          li.textContent = [coinName+' $'+coinSum.toFixed(2)];
-          coinListEl.appendChild(li);
-          }
+        runningBTCSum += coinCount;
+        let eurRate = data.EUR;
+        let coinEURSum = coinCount * eurRate;
+        runningEURSum += coinEURSum;
+        currencyExchange(coinName, coinCount, data);
         }); 
       });
     }
@@ -100,13 +100,36 @@ let runningSum = 0;
       });
     };
   }
-    function runTotals (runningSum) {
-      const runningSumEl = document.getElementById('running_sum');
-      const li = document.createElement('li');
-      li.textContent = runningSum;
-      runningSumEl.appendChild(li);
+    
+
+  function currencyExchange (coinName, coinCount, data) {
+    if (data.USD != null){
+          let usdRate = data.USD;
+          let coinUSDSum = coinCount * usdRate;
+          runningUSDSum += coinUSDSum;
     };
+    if (data.BTC != null && coinName != 'BTC'){
+      let btcRate = data.BTC;
+      let coinBTCSum = coinCount * btcRate;
+      runningBTCSum += coinBTCSum;
+    };
+    if (data.EUR != null){
+      let eurRate = data.EUR;
+      let coinEURSum = coinCount * eurRate;
+      runningEURSum += coinEURSum;
+    };
+    console.log(runningUSDSum);
+    console.log(runningBTCSum);
+    console.log(runningEURSum);
+    loadSums();
+  };
+
+  function loadSums () {
+    document.getElementById("USD-SUM").innerHTML = runningUSDSum.numberFormat(2);
+    document.getElementById("BTC-SUM").innerHTML = runningBTCSum.numberFormat(8);
+    document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
+}
 
   handleFormSubmission();
-  runTotals (runningSum);
+  
   

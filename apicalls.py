@@ -82,7 +82,7 @@ def erc20_value_search(coins):
 
 def btc_eth_toUSD():
 
-    url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD&api_key=" + CRYPTOCOMPARE_KEY
+    url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD"
     response = requests.get(url)
     btceth_usd = response.json()
 
