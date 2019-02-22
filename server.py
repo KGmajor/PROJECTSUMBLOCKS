@@ -24,15 +24,18 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+    session.clear()
     mains = btc_eth_toUSD()
     
     return render_template("homepage.html", mains=mains)
 
-@app.route('/wallets')
+@app.route('/wallets', methods=['GET'])
 def hold_wallets():
-
+    wallet_id = request.args.get('wallet_id')
+    alias = request.args.get('alias')
+    
+    session['wallet_id'] = alias
     pass
-
 
 @app.route('/wallet-processing.json', methods=['GET'])
 def wall_processing_json():

@@ -17,6 +17,7 @@ const enteredWallets = []
           enteredWallets.push(walletId);
           const errorMessage = document.getElementById('error_alert');
           errorMessage.classList.add("d-none");
+          $.get('/wallets?wallet_id=' + walletId + '?alias=' + alias);
           $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
             const results = response;
             console.log("Results", results);
@@ -34,6 +35,7 @@ const enteredWallets = []
     const ethCoins = results.eth_coins;
     const coinsToConvert = results.eth_coins;
     const rates = results.rates;
+    const mains = results.mains;
 
     handleCoins(ethCoins);
     handleWallets(wallets);
@@ -68,6 +70,22 @@ const enteredWallets = []
           };
         });
       });
+      //   function handleConversionToMain (converted, mains) {
+      //   if (converted.length === 0) return;
+      //   Object.entries(mains).forEach((main => {
+      //     let btc = main[0];
+      //     let eth = main[1];
+      //   });
+      //   let btcUsd = btc.USD;
+      //   let ethUsd = btc.USD;
+
+      //   if 
+
+      //     const convertoToMainEl = document.getElementById('convert_to_main');
+      //     const li = document.createElement('li');
+      //     li.textContent = coin;
+      //     coinListEl.appendChild(li);
+      // }
     };
 
     function handleWallets (wallets) {
