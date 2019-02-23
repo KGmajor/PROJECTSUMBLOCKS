@@ -20,17 +20,18 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       
       let walletId = document.getElementById("wallet_id").value;
       let alias = document.getElementById("alias").value;
+      sessionStorage.setItem(walletId, alias);
 
       if (enteredWallets.includes(walletId) === true) {
         const errorMessage = document.getElementById('error_alert');
         errorMessage.classList.remove("d-none");
-        document.getElementById('wallet_id').value='';
+        document.getElementById('wallet_id').value=''
+        document.getElementById('alias').value='';
       }
         else {
           enteredWallets.push(walletId);
           const errorMessage = document.getElementById('error_alert');
           errorMessage.classList.add("d-none");
-          // $.get('/wallets?wallet_id=' + walletId + '?alias=' + alias);
           $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
             const results = response;
             console.log("Results", results);
@@ -39,6 +40,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
             const resultsTable = document.getElementById('wallets_table');
             resultsTable.classList.remove("d-none");
             document.getElementById('wallet_id').value='';
+            document.getElementById('alias').value='';
           });
         };
     })
@@ -91,12 +93,17 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       if (wallets.length === 0) return;
       const walletListEl = document.getElementById('wallet_list');
       wallets.forEach((walletAddress) => {
-        // construct a <li> node
+        
         const li = document.createElement('li');
-        // Set the text content
-        li.textContent = walletAddress;
-        // append it to walletListEl
+
+        if (sessionStorage.getItem(walletAddress) != '') {
+        li.textContent = sessionStorage.getItem(walletAddress);
         walletListEl.appendChild(li);
+      } else {
+        li.textContent = walletAddress;
+        walletListEl.appendChild(li);
+      }
+        // append it to walletListEl
       });
     };
   }

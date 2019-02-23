@@ -89,8 +89,7 @@ def btc_eth_toUSD():
     return btceth_usd
 
 
-def all_coin_exchange_rate(tokens):
-    pass
+
 
 
 

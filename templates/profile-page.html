@@ -15,14 +15,10 @@
 <div class="container">
   <h3>Recently Entered Wallets</h3>
 
-  <ol>
-  {% for address, v in session.items() %}
-    {% if v == 'wallet' %}
-      <li>{{address}}</li>
-      <button type="button" class="btn btn-success">Keep</button>
-      <button type="button" class="btn btn-danger">Delete</button>
-    {% endif %}
-  {% endfor %}
+  <ol id="profile-wallets">
+
   </ol>
 
+
+<script src="/static/js/profiles.js" type="text/javascript"></script>
 {% endblock %}
