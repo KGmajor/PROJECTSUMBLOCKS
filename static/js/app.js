@@ -3,6 +3,9 @@ const enteredWallets = []
 let runningUSDSum = 0;
 let runningBTCSum = 0;
 let runningEURSum = 0;
+let runningCoinSum = new Object();
+
+
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
@@ -68,22 +71,25 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
         let coinName = entry[0];
         let coinCount = entry[1];
         $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
-        console.log(data.USD);
+        console.log(coinName, coinCount);
         currencyExchange(coinName, coinCount, data);
-        }); 
-      });
-    }
+        
+        if (coinName in runningCoinSum) {
+          runningCoinSum[coinName] += coinCount;
+        } else {
+          runningCoinSum[coinName] = coinCount;
+        }
+      }); 
+    });
+  }
 
     function handleBTCCoins (btcCoins) {
       Object.entries(btcCoins).forEach(entry => {
         let coinName = entry[0];
         let coinCount = entry[1];
         $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
-        console.log(data.USD);
         runningBTCSum += coinCount;
         let eurRate = data.EUR;
-        let coinEURSum = coinCount * eurRate;
-        runningEURSum += coinEURSum;
         currencyExchange(coinName, coinCount, data);
         }); 
       });
@@ -125,18 +131,69 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       let coinEURSum = coinCount * eurRate;
       runningEURSum += coinEURSum;
     };
-    console.log(runningUSDSum);
-    console.log(runningBTCSum);
-    console.log(runningEURSum);
     loadSums();
+    prepForChart(runningCoinSum);
   };
 
   function loadSums () {
     document.getElementById("USD-SUM").innerHTML = runningUSDSum.numberFormat(2);
     document.getElementById("BTC-SUM").innerHTML = runningBTCSum.numberFormat(8);
     document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
-}
+  }
+
+  function prepForChart(runningCoinSum){
+    for (let [ key, value] of Object.entries(runningCoinSum)){
+      addChartData(doughnutChart, key, value);
+    }
+  }
+
+
+  function addChartData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+    });
+    chart.update();
+  }
+
+  var ctx = document.getElementById('coinsCanvas').getContext('2d');
+  var doughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [
+      ],
+      datasets: [{
+          data: [],
+          backgroundColor: [
+              "#FF6384",
+              "#63FF84",
+              "#84FF63",
+              "#8463FF",
+              "#6384FF"
+          ],
+          borderColor: "black",
+          borderWidth: 2
+      }]
+    },
+    options: chartOptions
+  });
+
+  var chartOptions = {
+    rotation: -Math.PI,
+    cutoutPercentage: 30,
+    circumference: Math.PI,
+    legend: {
+      position: 'left'
+    },
+    animation: {
+      animateRotate: false,
+      animateScale: false
+    }
+  };
+  
 
   handleFormSubmission();
+
+  
   
   
