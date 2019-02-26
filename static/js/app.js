@@ -71,14 +71,16 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
         let coinName = entry[0];
         let coinCount = entry[1];
         $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
-        console.log(coinName, coinCount);
+        
         currencyExchange(coinName, coinCount, data);
+        addChartData(doughnutChart, coinName, coinCount);
         
         if (coinName in runningCoinSum) {
           runningCoinSum[coinName] += coinCount;
         } else {
           runningCoinSum[coinName] = coinCount;
         }
+        console.log(runningCoinSum);
       }); 
     });
   }
@@ -132,7 +134,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       runningEURSum += coinEURSum;
     };
     loadSums();
-    prepForChart(runningCoinSum);
   };
 
   function loadSums () {
@@ -141,18 +142,20 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
   }
 
-  function prepForChart(runningCoinSum){
-    for (let [ key, value] of Object.entries(runningCoinSum)){
-      addChartData(doughnutChart, key, value);
-    }
-  }
-
 
   function addChartData(chart, label, data) {
+    if (label in chart.data.labels) {
+      chart.data.datasets.forEach((dataset) => {
+        dataset.data += data;
+      });
+    }
+    else {
     chart.data.labels.push(label);
     chart.data.datasets.forEach((dataset) => {
         dataset.data.push(data);
     });
+  };
+    console.log(chart, label, data);
     chart.update();
   }
 
@@ -165,11 +168,18 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       datasets: [{
           data: [],
           backgroundColor: [
-              "#FF6384",
-              "#63FF84",
-              "#84FF63",
-              "#8463FF",
-              "#6384FF"
+              "#7FFFD4",
+              "#228B22",
+              "#0000FF",
+              "#2E8BF7",
+              "#483D8B",
+              "#00FF7F",
+              "#7CFC00",
+              "#00FF00",
+              "#32CD32",
+              "#98FB98",
+              "#90EE90",
+              "#00FA9A",
           ],
           borderColor: "black",
           borderWidth: 2
