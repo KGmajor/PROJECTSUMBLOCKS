@@ -28,13 +28,16 @@ def index():
     
     return render_template("homepage.html", mains=mains)
 
-@app.route('/wallets', methods=['GET'])
-def hold_wallets():
-    wallet_id = request.args.get('wallet_id')
-    alias = request.args.get('alias')
+@app.route('/profile_wallets.json', methods=['GET'])
+def user_wallets():
+    user_id = session['userid']
+    print(user_id)
+
+    get_user_wallets = Wallet.query.filter_by(user_id = user_id).all()
     
-    session['wallet_id'] = alias
-    pass
+    user_wallet_totals = run_my_wallets(get_user_wallets)
+    
+    return jsonify(user_wallet_totals=user_wallet_totals)
 
 @app.route('/wallet-processing.json', methods=['GET'])
 def wall_processing_json():
@@ -53,14 +56,13 @@ def wall_processing_json():
         eth_coins = erc20_address_call(address)
         rates = erc20_value_search(eth_coins)
 
-        converted = eth_coin_conversion(eth_coins, rates)
+        # converted = eth_coin_conversion(eth_coins, rates)
 
 
         return jsonify(
             wallets=[address],
             eth_coins=eth_coins,
             rates=rates,
-            converted=converted,
             mains=mains)
     else:
         btc_coins = btc_address_call(address)
@@ -100,7 +102,7 @@ def adding_user():
         session['logged_in']= True
         session.modified = True
         print('AWESOME **********')
-        return redirect(f'/profile-page/{userID}')
+        return redirect('/profile-page/')
 
 @app.route('/profile-page/<user_id>')
 def render_user_profile(user_id):
@@ -124,9 +126,12 @@ def log_user_in():
         if(password == usersMatchList[0].password):
             flash('You were successfully logged in')
             user_id = usersMatchList[0].user_id
+            users_wallets = Wallet.query.filter(Wallet.user_id == user_id).all()
             session['userid'] = user_id
             session['logged_in'] = True
             session.modified = True
+
+
             return redirect(f'/profile-page/{user_id}')
         else:
             flash('WRONG PASSWORD!!', 'error')

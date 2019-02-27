@@ -16,9 +16,14 @@ function profileWallets () {
       }
     });
   }
+function runSavedWallets() {
+  $('#wallet_run').on('click', (evt) => {
+      $.get('/profile_wallets.json', (response) => {
+            const results = response;
+            console.log(results);
+      });
+    })
+  }
 
-  // function handleWalletRemove () {
-  //   $(#'profile-wallets').on('click', (evt) => {
-      
-
+runSavedWallets();
 profileWallets();

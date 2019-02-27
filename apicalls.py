@@ -4,7 +4,6 @@ from datetime import datetime
 from collections import defaultdict
 import os
 
-CRYPTOCOMPARE_KEY = os.environ["CRYPTOCOMPARE_KEY"]
 ETHERSCAN_KEY = os.environ["ETHERSCAN_KEY"]
 
 def erc20_address_call(address):

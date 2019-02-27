@@ -1,15 +1,17 @@
-from collections import defaultdict
+from apicalls import *
 
+def run_my_wallets(my_wallets):
+    wallet_totals = []
+    for wallet in my_wallets:
+        print(wallet)
+        wallet = wallet.wallet_address
+        print(wallet)
+        try:
+            eth_coins = erc20_address_call(wallet)
+            wallet_totals.append(eth_coins)
+        except:
+            btc_coins = btc_address_call(wallet)
+            wallet_totals.append(btc_coins)
 
-def eth_coin_conversion(eth_coins, conversion_rates):
-    # converted = defaultdict(lambda : 0)
-    
-    # for coin, amount in eth_coins.items():
-    #     print(coin, amount)
-    #     for rate in conversion_rates:
-    #         print(rate)
-    #         converted[coin] = amount * rate
+    return wallet_totals
 
-
-    # return converted
-    pass
