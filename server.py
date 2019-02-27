@@ -36,7 +36,7 @@ def user_wallets():
     get_user_wallets = Wallet.query.filter_by(user_id = user_id).all()
     
     user_wallet_totals = run_my_wallets(get_user_wallets)
-    
+    print(jsonify(user_wallet_totals))
     return jsonify(user_wallet_totals=user_wallet_totals)
 
 @app.route('/wallet-processing.json', methods=['GET'])
@@ -104,8 +104,9 @@ def adding_user():
         print('AWESOME **********')
         return redirect('/profile-page/')
 
-@app.route('/profile-page/<user_id>')
-def render_user_profile(user_id):
+@app.route('/profile-page/')
+def render_user_profile():
+    user_id = session['userid']
     user = User.query.get(user_id)
     username = user.username
     email = user.email
@@ -132,7 +133,7 @@ def log_user_in():
             session.modified = True
 
 
-            return redirect(f'/profile-page/{user_id}')
+            return redirect(f'/profile-page/')
         else:
             flash('WRONG PASSWORD!!', 'error')
             return render_template("login-form.html")
