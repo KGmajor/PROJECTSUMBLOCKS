@@ -14,14 +14,41 @@
   </div>
 <hr>
   <div class="container">
-    <h3>Recently Entered Wallets</h3>
+    <div class="row">
+      <div class="col-sm">
+          <h3> My Portfolio Total in USD</h3>
+          <h4>$ <span id="USD-SUM-PROFILE"></span></h4>
+      </div>
+      <div class="col-sm">
+          <h3> My Portfolio Total in BTC</h3>
+          <h4>BTC: <span id="BTC-SUM-PROFILE"></span></h4>
+      </div>
+      <div class="col-sm">
+          <h3> Running Total in EUR</h3>
+          <h4>€ <span id="EUR-SUM-PROFILE"></span></h4>
+      </div>
+    </div>
+<hr>
+    <div class="row">
+      <div class="col-sm">
+      <h3>My Saved Wallets</h3>
 
-      <ol id="profile-wallets">
+        <ol id="saved-wallets">
 
-      </ol>
-  </div>
-  <div>
-    
+        </ol>
+      </div>
+      <div class="col-sm">
+      <h3>Recently Entered Wallets</h3>
+
+        <ol id="profile-wallets">
+
+        </ol>
+      </div>
+      <script> window.onload = function() {
+                runSavedWallets();
+              };
+      </script>
+    </div>
   </div>
 
 

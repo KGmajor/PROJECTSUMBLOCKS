@@ -1,4 +1,19 @@
 "use strict";
+const enteredWallets = []
+let runningUSDSum = 0;
+let runningBTCSum = 0;
+let runningEURSum = 0;
+let runningCoinSum = new Object();
+
+Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
+    dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
+    thousands_sep = typeof thousands_sep !== 'undefined' ? thousands_sep : ',';
+
+    var parts = this.toFixed(decimals).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_sep);
+
+    return parts.join(dec_point);
+}
 
 function profileWallets () {
   const profileWalletsEl = document.getElementById("profile-wallets");
@@ -17,13 +32,89 @@ function profileWallets () {
     });
   }
 function runSavedWallets() {
-  $('#wallet_run').on('click', (evt) => {
-      $.get('/profile_wallets.json', (response) => {
-            const results = response;
-            console.log(results);
+  $.get('/profile_wallets.json', (response) => {
+        const results = response;
+        console.log(results.user_wallet_totals);
+        handleSavedWallets(results.users_wallets);
+        Object.entries(response.user_wallet_totals).forEach(entry => {
+          if (entry[1][0] !== 'BTC') {
+            handleETHCoins(entry[1]);
+        }
+          else {
+            handleBTCCoins(entry[1]);
+        }
       });
     })
   }
 
-runSavedWallets();
+  function handleETHCoins (ethCoins) {
+    if (ethCoins.length === 0) return;
+    Object.entries(ethCoins).forEach(entry => {
+      let coinName = entry[0];
+      let coinCount = entry[1];
+      $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
+      
+      currencyExchange(coinName, coinCount, data);
+      // addChartData(doughnutChart, coinName, coinCount);
+      
+      if (coinName in runningCoinSum) {
+        runningCoinSum[coinName] += coinCount;
+      } else {
+        runningCoinSum[coinName] = coinCount;
+      }
+      console.log(runningCoinSum);
+    }); 
+  });
+}
+
+  function handleBTCCoins (btcCoins) {
+    Object.entries(btcCoins).forEach(entry => {
+      let coinName = entry[0];
+      let coinCount = entry[1];
+      $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
+      runningBTCSum += coinCount;
+      let eurRate = data.EUR;
+      currencyExchange(coinName, coinCount, data);
+      }); 
+    });
+  }
+  
+  function handleSavedWallets (wallets) {
+    if (wallets.length === 0) return;
+    const profileWalletListEl = document.getElementById('saved-wallets');
+    wallets.forEach((walletAddress) => {
+      
+      const li = document.createElement('li');
+      li.textContent = walletAddress;
+      profileWalletListEl.appendChild(li);
+    });
+  };
+
+  
+
+function currencyExchange (coinName, coinCount, data) {
+  if (data.USD != null){
+        let usdRate = data.USD;
+        let coinUSDSum = coinCount * usdRate;
+        runningUSDSum += coinUSDSum;
+  };
+  if (data.BTC != null && coinName != 'BTC'){
+    let btcRate = data.BTC;
+    let coinBTCSum = coinCount * btcRate;
+    runningBTCSum += coinBTCSum;
+  };
+  if (data.EUR != null){
+    let eurRate = data.EUR;
+    let coinEURSum = coinCount * eurRate;
+    runningEURSum += coinEURSum;
+  };
+  loadSums();
+};
+
+function loadSums () {
+  document.getElementById("USD-SUM-PROFILE").innerHTML = runningUSDSum.numberFormat(2);
+  document.getElementById("BTC-SUM-PROFILE").innerHTML = runningBTCSum.numberFormat(8);
+  document.getElementById("EUR-SUM-PROFILE").innerHTML = runningEURSum.numberFormat(2);
+}
+
 profileWallets();

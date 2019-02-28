@@ -1,6 +1,6 @@
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
+from flask import (Flask, render_template, redirect, request, flash, session, jsonify, url_for)
 from flask_debugtoolbar import DebugToolbarExtension
 
 import requests
@@ -34,10 +34,16 @@ def user_wallets():
     print(user_id)
 
     get_user_wallets = Wallet.query.filter_by(user_id = user_id).all()
-    
+    users_wallets = []
     user_wallet_totals = run_my_wallets(get_user_wallets)
-    print(jsonify(user_wallet_totals))
-    return jsonify(user_wallet_totals=user_wallet_totals)
+    
+    for wallet in get_user_wallets:
+        wallet = wallet.wallet_address
+        users_wallets.append(wallet)
+
+
+
+    return jsonify(user_wallet_totals=user_wallet_totals, users_wallets=users_wallets)
 
 @app.route('/wallet-processing.json', methods=['GET'])
 def wall_processing_json():
@@ -110,6 +116,11 @@ def render_user_profile():
     user = User.query.get(user_id)
     username = user.username
     email = user.email
+
+    get_user_wallets = Wallet.query.filter_by(user_id = user_id).all()
+    
+    user_wallet_totals = run_my_wallets(get_user_wallets)
+    print(user_wallet_totals)
     
     return render_template("profile-page.html", username=username, email=email)
 
@@ -133,7 +144,7 @@ def log_user_in():
             session.modified = True
 
 
-            return redirect(f'/profile-page/')
+            return redirect('/profile-page/')
         else:
             flash('WRONG PASSWORD!!', 'error')
             return render_template("login-form.html")
