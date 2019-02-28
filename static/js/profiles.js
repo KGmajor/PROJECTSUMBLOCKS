@@ -4,6 +4,7 @@ let runningUSDSum = 0;
 let runningBTCSum = 0;
 let runningEURSum = 0;
 let runningCoinSum = new Object();
+let chartUSDData = [];
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
@@ -46,6 +47,11 @@ function runSavedWallets() {
       });
     })
   }
+function saveMyWallet () {
+  $('#wallet_save').on('submit', (evt) => {
+      $.get('/save-wallet/wallet-id=' + walletId +'?alias=' + alias);
+    })
+}
 
   function handleETHCoins (ethCoins) {
     if (ethCoins.length === 0) return;
@@ -83,7 +89,7 @@ function runSavedWallets() {
     if (wallets.length === 0) return;
     const profileWalletListEl = document.getElementById('saved-wallets');
     wallets.forEach((walletAddress) => {
-      
+      enteredWallets.push(walletAddress);
       const li = document.createElement('li');
       li.textContent = walletAddress;
       profileWalletListEl.appendChild(li);
@@ -97,6 +103,8 @@ function currencyExchange (coinName, coinCount, data) {
         let usdRate = data.USD;
         let coinUSDSum = coinCount * usdRate;
         runningUSDSum += coinUSDSum;
+        let usdData = coinUSDSum.numberFormat(2);
+        chartUSDData.push(usdData);
   };
   if (data.BTC != null && coinName != 'BTC'){
     let btcRate = data.BTC;
@@ -116,5 +124,61 @@ function loadSums () {
   document.getElementById("BTC-SUM-PROFILE").innerHTML = runningBTCSum.numberFormat(8);
   document.getElementById("EUR-SUM-PROFILE").innerHTML = runningEURSum.numberFormat(2);
 }
+
+  function addChartData(chart, enteredWalletLabels, data) {
+    Object.entries(enteredWalletLabels).forEach((wallet) => {
+      chart.data.labels.push(wallet[1]);
+    })
+    Object.entries(data).forEach((sum) => {
+      chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(sum[1]);
+    });
+  })
+    chart.update();
+}
+
+  var ctx = document.getElementById('profileCanvas').getContext('2d');
+  var profileChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [
+      ],
+      datasets: [{
+          data: [],
+          backgroundColor: [
+              "#7FFFD4",
+              "#228B22",
+              "#0000FF",
+              "#2E8BF7",
+              "#483D8B",
+              "#00FF7F",
+              "#7CFC00",
+              "#00FF00",
+              "#32CD32",
+              "#98FB98",
+              "#90EE90",
+              "#00FA9A",
+          ],
+          borderColor: "black",
+          borderWidth: 2
+      }]
+    },
+    options: chartOptions
+  });
+
+  var chartOptions = {
+    rotation: -Math.PI,
+    cutoutPercentage: 30,
+    circumference: Math.PI,
+    legend: {
+      position: 'left'
+    },
+    animation: {
+      animateRotate: false,
+      animateScale: false
+    }
+  };
+
+addChartData(profileChart, enteredWallets, chartUSDData);
 
 profileWallets();

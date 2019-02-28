@@ -10,7 +10,13 @@
   <div class="container">
     <h2>Welcome {{username}} !</h2>
       Email: {{email}}
-      <button type="button" class="btn btn-primary" id="wallet_run">Update my total</button>
+      <div>
+        <form action="/save-wallet" method="GET" id="wallet_save">
+          Wallet Address : <input type="text" id="wallet_id" placeholder="ETH or BTC">
+          Alias(optional) : <input type="text" id="alias" placeholder="Satoshi's wallet" value="">
+          <input type="submit" value="Save">
+        </form>
+      </div>      
   </div>
 <hr>
   <div class="container">
@@ -27,6 +33,9 @@
           <h3> Running Total in EUR</h3>
           <h4>€ <span id="EUR-SUM-PROFILE"></span></h4>
       </div>
+      <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+          <canvas id="profileCanvas"></canvas>
+        </div>
     </div>
 <hr>
     <div class="row">

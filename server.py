@@ -124,6 +124,23 @@ def render_user_profile():
     
     return render_template("profile-page.html", username=username, email=email)
 
+@app.route('/save-wallet', methods=['GET'])
+def save_wallet():
+    wallet_address = request.args.get('wallet_id')
+    print(wallet_address)
+    wallet_alias = request.args.get('alias')
+    print(wallet_alias)
+
+    if wallet_alias == '':
+        wallet_alias = None
+    user_id = session['userid']
+
+    new_wallet = Wallet(user_id=user_id, wallet_address=wallet_address, wallet_alias=wallet_alias)
+    db.session.add(new_wallet)
+    db.session.commit()
+
+    return redirect('/profile-page')
+
 @app.route('/login-form')
 def show_login_form():
     return render_template('login-form.html')
