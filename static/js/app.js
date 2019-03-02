@@ -1,11 +1,9 @@
 
 const enteredWallets = []
+const btcCoinsTotals =[]
 let runningUSDSum = 0;
 let runningBTCSum = 0;
 let runningEURSum = 0;
-let runningCoinSum = new Object();
-
-
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
@@ -37,6 +35,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
           errorMessage.classList.add("d-none");
           $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
             const results = response;
+            let reRun = results;
             console.log("Results", results);
             handleJsonResponse(results);
 
@@ -51,51 +50,63 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
   
   function handleJsonResponse (results) {
     const wallets = results.wallets;
-    const ethCoins = results.eth_coins;
-    const coinsToConvert = results.eth_coins;
+    // let ethCoins = results.eth_coins.eth_coins;
     const btcCoins = results.btc_coins;
-    const mains = results.mains;
-    console.log(ethCoins);
-
+    // const ethIn = results.eth_coins.tx_in;
+    // const ethOut = results.eth_coins.tx_out;
+    
     handleWallets(wallets);
     
     if (wallets[0][0] === '0') {
-    handleETHCoins(ethCoins);
+    handleETHCoins(ethCoins, ethIn, ethOut);
   }
       else {
-      handleBTCCoins(btcCoins);
+      handleBTCCoins(btcCoins, wallets);
     }
 
-    function handleETHCoins (ethCoins) {
+    function handleETHCoins (ethCoins, ethIn, ethOut) {
       if (ethCoins.length === 0) return;
       Object.entries(ethCoins).forEach(entry => {
         let coinName = entry[0];
         let coinCount = entry[1];
         $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
-        
         currencyExchange(coinName, coinCount, data);
-        addChartData(doughnutChart, coinName, coinCount);
+      }); 
+    });
+      Object.entries(ethIn).forEach(entry => {
+        let coinName = entry[0];
+        let coinCount = entry[1];
+        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
         
-        if (coinName in runningCoinSum) {
-          runningCoinSum[coinName] += coinCount;
-        } else {
-          runningCoinSum[coinName] = coinCount;
-        }
-        console.log(runningCoinSum);
+        let ethInValue = coinCount * data.USD;
+      }); 
+    });
+      Object.entries(ethOut).forEach(entry => {
+        let coinName = entry[0];
+        let coinCount = entry[1];
+        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
+        
+        let ethOutValue = coinCount * data.USD;
       }); 
     });
   }
 
-    function handleBTCCoins (btcCoins) {
-      Object.entries(btcCoins).forEach(entry => {
-        let coinName = entry[0];
-        let coinCount = entry[1];
-        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
-        runningBTCSum += coinCount;
-        let eurRate = data.EUR;
-        currencyExchange(coinName, coinCount, data);
-        }); 
-      });
+    function handleBTCCoins (btcCoins, wallet) {
+      let btcWallet = wallet;
+      let coinName = 'BTC';
+      let coinCount = btcCoins.BTC;
+      let btcIn = btcCoins.tx_in;
+      let btcOut = btcCoins.tx_out;
+      
+
+      $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
+      runningBTCSum += coinCount;
+      let amountIN = btcIn * data.USD;
+      let amountOUT = btcOut * data.USD;
+
+      addChartData(walletChart, btcWallet, amountIN.numberFormat(2), amountOUT.numberFormat(2));
+      currencyExchange(coinName, coinCount, data);
+      }); 
     }
     
     function handleWallets (wallets) {
@@ -128,6 +139,8 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       let btcRate = data.BTC;
       let coinBTCSum = coinCount * btcRate;
       runningBTCSum += coinBTCSum;
+      btcCoinsTotals.pop();
+      btcCoinsTotals.push(coinBTCSum);
     };
     if (data.EUR != null){
       let eurRate = data.EUR;
@@ -144,69 +157,63 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
   }
 
 
-  function addChartData(chart, label, data) {
-    if (label in chart.data.labels) {
-      chart.data.datasets.forEach((dataset) => {
-        dataset.data += data;
-      });
-    }
-    else {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-    });
-  };
-    console.log(chart, label, data);
+  function addChartData(chart, wallets, dataIN, dataOut) {
+    barChartData.labels.push(wallets);
+    barChartData.datasets[0].data.push(dataIN);
+    barChartData.datasets[1].data.push(dataOut);
     chart.update();
   }
+     
 
-  var ctx = document.getElementById('coinsCanvas').getContext('2d');
-  var doughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: [
-      ],
-      datasets: [{
-          data: [],
-          backgroundColor: [
-              "#7FFFD4",
-              "#228B22",
-              "#0000FF",
-              "#2E8BF7",
-              "#483D8B",
-              "#00FF7F",
-              "#7CFC00",
-              "#00FF00",
-              "#32CD32",
-              "#98FB98",
-              "#90EE90",
-              "#00FA9A",
-          ],
-          borderColor: "black",
-          borderWidth: 2
+
+  var barChartData = {
+  labels: [],
+  datasets: [{
+    label: 'Money In',
+    backgroundColor: '#1f77b4',
+    data: [
+    ]
+  }, {
+    label: 'Money Out',
+    backgroundColor: '#ff7f0e',
+    data: [
+    ]
+  }]
+};
+
+
+var ctx = document.getElementById('canvas').getContext('2d');
+var walletChart = new Chart(ctx, {
+  type: 'bar',
+  data: barChartData,
+  options: {
+    title: {
+      display: true,
+      text: 'Chart.js Bar Chart - Stacked'
+    },
+    tooltips: {
+      mode: 'index',
+      intersect: false
+    },
+    responsive: true,
+    scales: {
+      xAxes: [{
+        stacked: true,
+      }],
+      yAxes: [{
+        stacked: true
       }]
-    },
-    options: chartOptions
-  });
-
-  var chartOptions = {
-    rotation: -Math.PI,
-    cutoutPercentage: 30,
-    circumference: Math.PI,
-    legend: {
-      position: 'left'
-    },
-    animation: {
-      animateRotate: false,
-      animateScale: false
     }
-  };
+  }
+});
+
 
     
   
 
   handleFormSubmission();
-
+  // addChartData(doughnutChart, enteredWallets, btcCoinsTotals);
+  
   
   
   

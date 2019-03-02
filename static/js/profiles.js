@@ -35,7 +35,7 @@ function profileWallets () {
 function runSavedWallets() {
   $.get('/profile_wallets.json', (response) => {
         const results = response;
-        console.log(results.user_wallet_totals);
+        console.log(results.users_wallets);
         handleSavedWallets(results.users_wallets);
         Object.entries(response.user_wallet_totals).forEach(entry => {
           if (entry[1][0] !== 'BTC') {
@@ -47,11 +47,6 @@ function runSavedWallets() {
       });
     })
   }
-function saveMyWallet () {
-  $('#wallet_save').on('submit', (evt) => {
-      $.get('/save-wallet/wallet-id=' + walletId +'?alias=' + alias);
-    })
-}
 
   function handleETHCoins (ethCoins) {
     if (ethCoins.length === 0) return;
@@ -89,10 +84,16 @@ function saveMyWallet () {
     if (wallets.length === 0) return;
     const profileWalletListEl = document.getElementById('saved-wallets');
     wallets.forEach((walletAddress) => {
-      enteredWallets.push(walletAddress);
+      enteredWallets.push(walletAddress[0]);
       const li = document.createElement('li');
-      li.textContent = walletAddress;
-      profileWalletListEl.appendChild(li);
+      if (walletAddress[1] !== null) {
+        li.textContent = walletAddress[1];
+        profileWalletListEl.appendChild(li);
+        profileWalletListEl.insertAdjacentHTML('beforeend', '<i class="fas fa-info-circle" title="'+ walletAddress[0] +'"></i>');
+      } else {
+        li.textContent = walletAddress[0];
+        profileWalletListEl.appendChild(li);
+      }
     });
   };
 
@@ -125,60 +126,5 @@ function loadSums () {
   document.getElementById("EUR-SUM-PROFILE").innerHTML = runningEURSum.numberFormat(2);
 }
 
-  function addChartData(chart, enteredWalletLabels, data) {
-    Object.entries(enteredWalletLabels).forEach((wallet) => {
-      chart.data.labels.push(wallet[1]);
-    })
-    Object.entries(data).forEach((sum) => {
-      chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(sum[1]);
-    });
-  })
-    chart.update();
-}
-
-  var ctx = document.getElementById('profileCanvas').getContext('2d');
-  var profileChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: [
-      ],
-      datasets: [{
-          data: [],
-          backgroundColor: [
-              "#7FFFD4",
-              "#228B22",
-              "#0000FF",
-              "#2E8BF7",
-              "#483D8B",
-              "#00FF7F",
-              "#7CFC00",
-              "#00FF00",
-              "#32CD32",
-              "#98FB98",
-              "#90EE90",
-              "#00FA9A",
-          ],
-          borderColor: "black",
-          borderWidth: 2
-      }]
-    },
-    options: chartOptions
-  });
-
-  var chartOptions = {
-    rotation: -Math.PI,
-    cutoutPercentage: 30,
-    circumference: Math.PI,
-    legend: {
-      position: 'left'
-    },
-    animation: {
-      animateRotate: false,
-      animateScale: false
-    }
-  };
-
-addChartData(profileChart, enteredWallets, chartUSDData);
 
 profileWallets();

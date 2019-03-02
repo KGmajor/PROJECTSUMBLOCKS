@@ -11,9 +11,9 @@
     <h2>Welcome {{username}} !</h2>
       Email: {{email}}
       <div>
-        <form action="/save-wallet" method="GET" id="wallet_save">
-          Wallet Address : <input type="text" id="wallet_id" placeholder="ETH or BTC">
-          Alias(optional) : <input type="text" id="alias" placeholder="Satoshi's wallet" value="">
+        <form action="/save-wallet" method="POST" id="wallet_save">
+          Wallet Address : <input type="text" name="wallet_id" placeholder="ETH or BTC">
+          Alias(optional) : <input type="text" name="alias" placeholder="Satoshi's wallet" value="">
           <input type="submit" value="Save">
         </form>
       </div>      

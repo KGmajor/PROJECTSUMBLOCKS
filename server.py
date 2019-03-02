@@ -31,15 +31,19 @@ def index():
 @app.route('/profile_wallets.json', methods=['GET'])
 def user_wallets():
     user_id = session['userid']
-    print(user_id)
+    
 
     get_user_wallets = Wallet.query.filter_by(user_id = user_id).all()
+    
     users_wallets = []
     user_wallet_totals = run_my_wallets(get_user_wallets)
     
     for wallet in get_user_wallets:
+        print(wallet)
+        alias = wallet.wallet_alias
         wallet = wallet.wallet_address
-        users_wallets.append(wallet)
+
+        users_wallets.append([wallet, alias])
 
 
 
@@ -124,11 +128,11 @@ def render_user_profile():
     
     return render_template("profile-page.html", username=username, email=email)
 
-@app.route('/save-wallet', methods=['GET'])
+@app.route('/save-wallet', methods=['POST'])
 def save_wallet():
-    wallet_address = request.args.get('wallet_id')
+    wallet_address = request.form.get('wallet_id')
     print(wallet_address)
-    wallet_alias = request.args.get('alias')
+    wallet_alias = request.form.get('alias')
     print(wallet_alias)
 
     if wallet_alias == '':

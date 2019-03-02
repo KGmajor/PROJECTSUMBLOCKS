@@ -12,6 +12,9 @@ def erc20_address_call(address):
       "&startblock=0&endblock=999999999&sort=asc&apikey=" + ETHERSCAN_KEY
     eth_token_totals = defaultdict(lambda : 0)
     positive_count_eth = defaultdict(lambda : 0)
+    transactions_in = defaultdict(lambda : 0)
+    transactions_out = defaultdict(lambda : 0)
+    client_response = defaultdict(lambda : 0)
     
     response = requests.get(url)
     address_content = response.json()
@@ -34,30 +37,44 @@ def erc20_address_call(address):
         
         if tx_to == address.lower():
             eth_token_totals[token_symbol] += real_value
+            transactions_in[token_symbol] += real_value
         else:
             eth_token_totals[token_symbol] += (real_value * -1)
+            transactions_out[token_symbol] += (real_value * -1)
 
     for k, v in eth_token_totals.items():
         if v >= 0:
             positive_count_eth[k] += v
-
-    print(eth_token_totals)
-    return positive_count_eth
+    client_response['eth_coins'] = positive_count_eth
+    client_response['tx_in'] = transactions_in
+    client_response['tx_out'] = transactions_out
+    print('*************', positive_count_eth)
+    
+    return client_response
             
 
 
 def btc_address_call(address):
     address = str(address)
-    url = "https://blockchain.info/q/addressbalance/" + address 
+    url = "https://blockchain.info/rawaddr/" + address 
     btc_token_totals = defaultdict(lambda : 0)
+    
     response = requests.get(url)
     btc_balance = response.json()
+
+    balance = btc_balance.get("final_balance")
+    total_received = btc_balance.get("total_received")
+    total_sent = btc_balance.get("total_sent")
     
-    btc_decimal = int(btc_balance) * 10 **(-8)
+    btc_decimal = int(balance) * 10 **(-8)
+    received = int(total_received) * 10 **(-8)
+    sent = int(total_sent) * 10 **(-8)
     
 
     btc_token_totals['BTC'] += float(btc_decimal)
-    print(btc_token_totals)
+    btc_token_totals['tx_in'] = received
+    btc_token_totals['tx_out'] = sent
+
     return btc_token_totals
     
 
