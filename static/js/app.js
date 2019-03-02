@@ -102,9 +102,12 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
       runningBTCSum += coinCount;
       let amountIN = btcIn * data.USD;
-      let amountOUT = btcOut * data.USD;
+      let amountOUT = (btcOut * data.USD) * -1;
 
-      addChartData(walletChart, btcWallet, amountIN.numberFormat(2), amountOUT.numberFormat(2));
+      btcAmountIn = parseFloat(amountIN);
+      btcAmountOut = parseFloat(amountOUT);
+
+      addChartData(walletChart, btcWallet, btcAmountIn, btcAmountOut);
       currencyExchange(coinName, coinCount, data);
       }); 
     }
