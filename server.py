@@ -66,7 +66,7 @@ def wall_processing_json():
         eth_coins = erc20_address_call(address)
         rates = erc20_value_search(eth_coins)
 
-        # converted = eth_coin_conversion(eth_coins, rates)
+        
 
 
         return jsonify(
@@ -76,9 +76,11 @@ def wall_processing_json():
             mains=mains)
     else:
         btc_coins = btc_address_call(address)
+        eth_coins = {}
         return jsonify(
             wallets=[address],
             btc_coins=btc_coins,
+            eth_coins=eth_coins,
             mains=mains)
 
 

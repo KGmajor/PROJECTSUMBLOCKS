@@ -1,6 +1,5 @@
 
 const enteredWallets = []
-const btcCoinsTotals =[]
 let runningUSDSum = 0;
 let runningBTCSum = 0;
 let runningEURSum = 0;
@@ -35,7 +34,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
           errorMessage.classList.add("d-none");
           $.get('/wallet-processing.json?wallet_id=' + walletId, (response) => {
             const results = response;
-            let reRun = results;
             console.log("Results", results);
             handleJsonResponse(results);
 
@@ -50,15 +48,13 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
   
   function handleJsonResponse (results) {
     const wallets = results.wallets;
-    // let ethCoins = results.eth_coins.eth_coins;
+    const ethCoins = results.eth_coins.eth_coins;
     const btcCoins = results.btc_coins;
-    // const ethIn = results.eth_coins.tx_in;
-    // const ethOut = results.eth_coins.tx_out;
     
     handleWallets(wallets);
     
     if (wallets[0][0] === '0') {
-    handleETHCoins(ethCoins, ethIn, ethOut);
+    handleETHCoins(ethCoins);
   }
       else {
       handleBTCCoins(btcCoins, wallets);
@@ -73,41 +69,15 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
         currencyExchange(coinName, coinCount, data);
       }); 
     });
-      Object.entries(ethIn).forEach(entry => {
-        let coinName = entry[0];
-        let coinCount = entry[1];
-        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
-        
-        let ethInValue = coinCount * data.USD;
-      }); 
-    });
-      Object.entries(ethOut).forEach(entry => {
-        let coinName = entry[0];
-        let coinCount = entry[1];
-        $.getJSON('https://min-api.cryptocompare.com/data/price?fsym='+ coinName +'&tsyms=USD,BTC,EUR', function(data){
-        
-        let ethOutValue = coinCount * data.USD;
-      }); 
-    });
   }
 
     function handleBTCCoins (btcCoins, wallet) {
       let btcWallet = wallet;
       let coinName = 'BTC';
       let coinCount = btcCoins.BTC;
-      let btcIn = btcCoins.tx_in;
-      let btcOut = btcCoins.tx_out;
-      
 
       $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
       runningBTCSum += coinCount;
-      let amountIN = btcIn * data.USD;
-      let amountOUT = (btcOut * data.USD) * -1;
-
-      btcAmountIn = parseFloat(amountIN);
-      btcAmountOut = parseFloat(amountOUT);
-
-      addChartData(walletChart, btcWallet, btcAmountIn, btcAmountOut);
       currencyExchange(coinName, coinCount, data);
       }); 
     }
@@ -142,8 +112,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       let btcRate = data.BTC;
       let coinBTCSum = coinCount * btcRate;
       runningBTCSum += coinBTCSum;
-      btcCoinsTotals.pop();
-      btcCoinsTotals.push(coinBTCSum);
     };
     if (data.EUR != null){
       let eurRate = data.EUR;
@@ -160,62 +128,8 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
   }
 
 
-  function addChartData(chart, wallets, dataIN, dataOut) {
-    barChartData.labels.push(wallets);
-    barChartData.datasets[0].data.push(dataIN);
-    barChartData.datasets[1].data.push(dataOut);
-    chart.update();
-  }
      
-
-
-  var barChartData = {
-  labels: [],
-  datasets: [{
-    label: 'Money In',
-    backgroundColor: '#1f77b4',
-    data: [
-    ]
-  }, {
-    label: 'Money Out',
-    backgroundColor: '#ff7f0e',
-    data: [
-    ]
-  }]
-};
-
-
-var ctx = document.getElementById('canvas').getContext('2d');
-var walletChart = new Chart(ctx, {
-  type: 'bar',
-  data: barChartData,
-  options: {
-    title: {
-      display: true,
-      text: 'Chart.js Bar Chart - Stacked'
-    },
-    tooltips: {
-      mode: 'index',
-      intersect: false
-    },
-    responsive: true,
-    scales: {
-      xAxes: [{
-        stacked: true,
-      }],
-      yAxes: [{
-        stacked: true
-      }]
-    }
-  }
-});
-
-
-    
-  
-
-  handleFormSubmission();
-  // addChartData(doughnutChart, enteredWallets, btcCoinsTotals);
+handleFormSubmission();
   
   
   
