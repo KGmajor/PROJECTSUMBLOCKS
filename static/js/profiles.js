@@ -16,22 +16,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     return parts.join(dec_point);
 }
 
-function profileWallets () {
-  const profileWalletsEl = document.getElementById("profile-wallets");
-  Object.keys(sessionStorage).forEach(function(key){
-    const li = document.createElement('li');
-
-      if (sessionStorage.getItem(key) != '') {
-        li.textContent = sessionStorage.getItem(key);
-        profileWalletsEl.appendChild(li);
-        profileWalletsEl.insertAdjacentHTML('beforeend', '<button type="button" class="btn btn-success" data-cmd="keep" id="'+ key +'">Keep</button><button type="button" class="btn btn-danger" data-cmd="delete" id="'+ key +'">Delete</button>');
-      } else {
-        li.textContent = key;
-        profileWalletsEl.appendChild(li);
-        profileWalletsEl.insertAdjacentHTML('beforeend', '<button type="button" class="btn btn-success" data-cmd="keep" id="'+ key +'">Keep</button><button type="button" class="btn btn-danger" data-cmd="delete" id="'+ key +'">Delete</button>');
-      }
-    });
-  }
 function runSavedWallets() {
   $.get('/profile_wallets.json', (response) => {
         const results = response;
@@ -87,11 +71,11 @@ function runSavedWallets() {
       enteredWallets.push(walletAddress[0]);
       const li = document.createElement('li');
       if (walletAddress[1] !== null) {
-        li.textContent = walletAddress[1];
+        li.innerHTML = "<a href='/wallet-page/"+walletAddress[1]+"''>" + walletAddress[1] + "</a>";
         profileWalletListEl.appendChild(li);
         profileWalletListEl.insertAdjacentHTML('beforeend', '<i class="fas fa-info-circle" title="'+ walletAddress[0] +'"></i>');
       } else {
-        li.textContent = walletAddress[0];
+        li.innerHTML = "<a href='/wallet-page/"+walletAddress[0]+"''>" + walletAddress[0] + "</a>";;
         profileWalletListEl.appendChild(li);
       }
     });
@@ -126,5 +110,3 @@ function loadSums () {
   document.getElementById("EUR-SUM-PROFILE").innerHTML = runningEURSum.numberFormat(2);
 }
 
-
-profileWallets();

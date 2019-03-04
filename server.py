@@ -85,9 +85,12 @@ def wall_processing_json():
 
 
 
-@app.route('/results')
-def add_more_wallets():
-    return render_template("results.html")
+@app.route('/wallet-page/<wallet_address>')
+def render_wallet_info(wallet_address):
+
+    
+    
+    return render_template("wallet-page.html", wallet_address=wallet_address)
 
 @app.route('/add-user')
 def add_a_user():

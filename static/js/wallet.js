@@ -1,3 +1,11 @@
+
+
+function removeWallet() {
+  $('#remove_wallet').on('submit', (evt) => {
+    $.get('/remove-wallet/wallet_address=' + )
+  })
+}
+
 function addChartData(chart, wallets, dataIN, dataOut) {
     barChartData.labels.push(wallets);
     barChartData.datasets[0].data.push(dataIN);

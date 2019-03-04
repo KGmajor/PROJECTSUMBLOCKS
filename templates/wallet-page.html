@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if session['logged_in'] == True %}
+    <a href="/profile-page/" id="userpage">My Profile</a>
+    <a href="/logout" id="loggedout" tabindex="-1">Log Out</a>
+    <script>document.getElementById("logged").style.display = 'none';</script>
+    <script>document.getElementById("registration").style.display = 'none';</script>
+    <hr>
+  {% endif %}
+    <div class="container-fluid">
+    <h2>{{wallet_address}}</h2>
+    <button class="btn btn-outline-danger" id="remove_wallet" type="submit">Remove from saved wallets</button>
 
-<div class="container-fluid">
-
-<div class="chart-container" style="position: relative; height:40vh; width:80vw">
-          <canvas id="canvas"></canvas>
-        </div>
-<script src='/static/js/wallet.js' type='text/javascript'></script>
-</div>
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+              <canvas id="canvas"></canvas>
+            </div>
+    <script src='/static/js/wallet.js' type='text/javascript'></script>
+    </div>
 
         
 

@@ -90,12 +90,13 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
         const li = document.createElement('li');
 
         if (sessionStorage.getItem(walletAddress) != '') {
-        li.textContent = sessionStorage.getItem(walletAddress);
-        walletListEl.appendChild(li);
+          enteredAlias = sessionStorage.getItem(walletAddress);
+          li.innerHTML = "<a href='/wallet-page/"+walletAddress+"''>" + enteredAlias + "</a>"
+          walletListEl.appendChild(li);
       } else {
-        li.textContent = walletAddress;
-        walletListEl.appendChild(li);
-      }
+          li.innerHTML = "<a href='/wallet-page/"+walletAddress+"''>" + walletAddress + "</a>"
+          walletListEl.appendChild(li);
+        }
         // append it to walletListEl
       });
     };
