@@ -28,7 +28,7 @@ Sum Blocks is made possible by several open-source products and API's:
 
 ### Installation
 
-Dillinger requires [Python](https://www.python.org/) 3.7.2 to run.
+Sum Blocks requires [Python](https://www.python.org/) 3.7.2 to run.
 
 Install the **requirements.txt** and start the server.
 
