@@ -9,11 +9,15 @@
   {% endif %}
     <div class="container-fluid">
     <h2>{{wallet_address}}</h2>
-    <button class="btn btn-outline-danger" id="remove_wallet" type="submit">Remove from saved wallets</button>
-
-    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
-              <canvas id="canvas"></canvas>
-            </div>
+    {% if session['logged_in'] == True %}
+    <script> let myWallet = '{{wallet_address}}';</script>
+    <form action="/remove-wallet/{{wallet_address}}">
+        <button class="btn btn-outline-danger" id="remove_wallet" type="submit">Remove from saved wallets</button>
+    </form>
+    
+    {% endif %}
+        <canvas id="canvas"></canvas>
+    </div>
     <script src='/static/js/wallet.js' type='text/javascript'></script>
     </div>
 

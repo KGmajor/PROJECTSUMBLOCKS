@@ -39,7 +39,6 @@ def user_wallets():
     user_wallet_totals = run_my_wallets(get_user_wallets)
     
     for wallet in get_user_wallets:
-        print(wallet)
         alias = wallet.wallet_alias
         wallet = wallet.wallet_address
 
@@ -53,7 +52,7 @@ def user_wallets():
 def wall_processing_json():
     # """Handling the wallet address input"""
     address = request.args.get('wallet_id') # TODO persist the wallet address for the user. 
-    print(address)
+    
     
     session[address] = 1
     session.modified = True
@@ -88,9 +87,25 @@ def wall_processing_json():
 @app.route('/wallet-page/<wallet_address>')
 def render_wallet_info(wallet_address):
 
-    
+    holdAddress = {}
+    holdAddress[wallet_address] = 1
+    sendAddress = jsonify(holdAddress)
     
     return render_template("wallet-page.html", wallet_address=wallet_address)
+
+@app.route('/remove-wallet/<wallet_address>')
+def remove_wallet(wallet_address):
+    user_id = session['userid']
+    to_remove = wallet_address
+    remove_wallet = Wallet.query.filter(wallet_address == to_remove, user_id == user_id).first()
+    print(remove_wallet)
+    
+    db.session.delete(remove_wallet)
+    db.session.commit()
+
+    print("******REMOVE******"+ wallet_address)
+    
+    return redirect('/profile-page')
 
 @app.route('/add-user')
 def add_a_user():
@@ -129,16 +144,16 @@ def render_user_profile():
     get_user_wallets = Wallet.query.filter_by(user_id = user_id).all()
     
     user_wallet_totals = run_my_wallets(get_user_wallets)
-    print(user_wallet_totals)
+    
     
     return render_template("profile-page.html", username=username, email=email)
 
 @app.route('/save-wallet', methods=['POST'])
 def save_wallet():
     wallet_address = request.form.get('wallet_id')
-    print(wallet_address)
+    
     wallet_alias = request.form.get('alias')
-    print(wallet_alias)
+    
 
     if wallet_alias == '':
         wallet_alias = None
@@ -159,7 +174,7 @@ def log_user_in():
     email = request.form.get('email')
     password = request.form.get('password')
     usersMatchList = User.query.filter_by(email = email).all()
-    print(usersMatchList)
+    
     if (usersMatchList):
         if(password == usersMatchList[0].password):
             flash('You were successfully logged in')
