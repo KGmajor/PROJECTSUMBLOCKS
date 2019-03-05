@@ -1,4 +1,4 @@
-# Sum Blocks
+# Sum Blocks (WIP)
 
 
 Sum Blocks is a cryptocurrency wallet aggregator, that pulls both Ethereum and Bitcoin based wallet data and returns $USD/EUR sums for the wallets. 
