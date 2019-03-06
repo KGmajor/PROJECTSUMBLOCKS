@@ -24,6 +24,7 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
     session.clear()
+    session['logged_in']= False
     mains = btc_eth_toUSD()
     
     return render_template("homepage.html", mains=mains)

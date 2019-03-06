@@ -1,8 +1,8 @@
 
 const enteredWallets = []
-let runningUSDSum = 0;
-let runningBTCSum = 0;
-let runningEURSum = 0;
+var runningUSDSum = 0;
+var runningBTCSum = 0;
+var runningEURSum = 0;
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
@@ -119,19 +119,60 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       let coinEURSum = coinCount * eurRate;
       runningEURSum += coinEURSum;
     };
-    loadSums();
+    loadSums(runningUSDSum, runningBTCSum, runningEURSum);
+    document.getElementById("USD-SUM").classList.remove("text-success");
+    document.getElementById("USD-SUM").classList.remove("text-danger");
   };
 
-  function loadSums () {
+   function refreshExchange (coinName, coinCount, data) {
+    document.getElementById("USD-SUM").classList.remove("text-success");
+    document.getElementById("USD-SUM").classList.remove("text-danger");
+    document.getElementById("EUR-SUM").classList.remove("text-success");
+    document.getElementById("EUR-SUM").classList.remove("text-danger");
+    let usdRate = data.USD;
+    console.log(runningUSDSum)
+    
+    let updatedUSDSum = coinCount * usdRate;
+    evalIndicator(runningUSDSum, updatedUSDSum);
+    
+    runningUSDSum = updatedUSDSum;
+    
+    let eurRate = data.EUR;
+    let updatedEURSum = coinCount * eurRate;
+    runningEURSum = updatedEURSum;
+    loadSums(updatedUSDSum, runningBTCSum, runningEURSum);
+  };
+
+  function loadSums (runningUSDSum, runningBTCSum, runningEURSum) {
     document.getElementById("USD-SUM").innerHTML = runningUSDSum.numberFormat(2);
     document.getElementById("BTC-SUM").innerHTML = runningBTCSum.numberFormat(8);
     document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
   }
 
+  function refreshRates () {
+    $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR',
+      function(data) {
+        console.log(data)
+        let coinName = 'BTC'
+        refreshExchange(coinName, runningBTCSum, data)
+        console.log('refreshing rates!')
+    });
+  }
+  setInterval(refreshRates, 30000);
 
+  function evalIndicator (oldRate, runningUSDSum) {
+    if (oldRate < runningUSDSum) {
+      document.getElementById("USD-SUM").className += "text-success";
+      document.getElementById("EUR-SUM").className += "text-success";
+    } 
+    else {
+      document.getElementById("USD-SUM").className += "text-danger";
+      document.getElementById("EUR-SUM").className += "text-danger";
+    }
+  }
      
 handleFormSubmission();
-  
+
   
   
   
