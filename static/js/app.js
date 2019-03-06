@@ -3,6 +3,7 @@ const enteredWallets = []
 var runningUSDSum = 0;
 var runningBTCSum = 0;
 var runningEURSum = 0;
+var btcRate = 0;
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
@@ -44,6 +45,14 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
           });
         };
     })
+  }
+
+  function getInstantRates () {
+  $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR',
+    function(data) {
+      btcRate = data.USD;
+      document.getElementById("BTC-rate").innerHTML = btcRate.numberFormat(2);
+    });
   }
   
   function handleJsonResponse (results) {
@@ -120,15 +129,16 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       runningEURSum += coinEURSum;
     };
     loadSums(runningUSDSum, runningBTCSum, runningEURSum);
-    document.getElementById("USD-SUM").classList.remove("text-success");
-    document.getElementById("USD-SUM").classList.remove("text-danger");
   };
 
    function refreshExchange (coinName, coinCount, data) {
-    document.getElementById("USD-SUM").classList.remove("text-success");
-    document.getElementById("USD-SUM").classList.remove("text-danger");
-    document.getElementById("EUR-SUM").classList.remove("text-success");
-    document.getElementById("EUR-SUM").classList.remove("text-danger");
+    document.getElementById("indicator").classList.remove("fa-angle-up");
+    document.getElementById("indicator").classList.remove("fa-angle-down");
+    document.getElementById("indicator2").classList.remove("fa-angle-up");
+    document.getElementById("indicator2").classList.remove("fa-angle-down");
+    document.getElementById("indicator3").classList.remove("fa-angle-down");
+    document.getElementById("indicator3").classList.remove("fa-angle-up");
+
     let usdRate = data.USD;
     console.log(runningUSDSum)
     
@@ -152,26 +162,32 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
   function refreshRates () {
     $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR',
       function(data) {
+        btcRate = data.USD;
+        document.getElementById("BTC-rate").innerHTML = btcRate.numberFormat(2);
         console.log(data)
         let coinName = 'BTC'
         refreshExchange(coinName, runningBTCSum, data)
         console.log('refreshing rates!')
+        console.log(runningBTCSum)
     });
   }
   setInterval(refreshRates, 30000);
 
   function evalIndicator (oldRate, runningUSDSum) {
     if (oldRate < runningUSDSum) {
-      document.getElementById("USD-SUM").className += "text-success";
-      document.getElementById("EUR-SUM").className += "text-success";
+      document.getElementById("indicator").className += (" fa-angle-up");
+      document.getElementById("indicator2").className += (" fa-angle-up");
+      document.getElementById("indicator3").className += (" fa-angle-up");
     } 
     else {
-      document.getElementById("USD-SUM").className += "text-danger";
-      document.getElementById("EUR-SUM").className += "text-danger";
+      document.getElementById("indicator").className += (" fa-angle-down");
+      document.getElementById("indicator2").className += (" fa-angle-down");
+      document.getElementById("indicator3").className += (" fa-angle-down");
     }
   }
      
 handleFormSubmission();
+getInstantRates();
 
   
   

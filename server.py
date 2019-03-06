@@ -38,6 +38,7 @@ def user_wallets():
     
     users_wallets = []
     user_wallet_totals = run_my_wallets(get_user_wallets)
+    print(user_wallet_totals)
     
     for wallet in get_user_wallets:
         alias = wallet.wallet_alias
@@ -46,8 +47,7 @@ def user_wallets():
         users_wallets.append([wallet, alias])
 
 
-
-    return jsonify(user_wallet_totals=user_wallet_totals, users_wallets=users_wallets)
+    return jsonify(user_wallet_totals=user_wallet_totals, users_wallets=users_wallets,)
 
 @app.route('/wallet-processing.json', methods=['GET'])
 def wall_processing_json():
@@ -98,7 +98,7 @@ def render_wallet_info(wallet_address):
 def remove_wallet(wallet_address):
     user_id = session['userid']
     to_remove = wallet_address
-    remove_wallet = Wallet.query.filter(wallet_address == to_remove, user_id == user_id).first()
+    remove_wallet = Wallet.query.filter_by(wallet_address == to_remove, user_id == user_id).first()
     print(remove_wallet)
     
     db.session.delete(remove_wallet)

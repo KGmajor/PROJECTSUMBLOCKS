@@ -8,22 +8,29 @@
   {% endif %}
    <hr>
   <div class="container">
-    <h2>Welcome {{username}} !</h2>
-      Email: {{email}}
-      <div>
-        <form action="/save-wallet" method="POST" id="wallet_save">
-          Wallet Address : <input type="text" name="wallet_id" placeholder="ETH or BTC">
-          Alias(optional) : <input type="text" name="alias" placeholder="Satoshi's wallet" value="">
-          <input type="submit" value="Save">
-        </form>
-      </div>      
+    <div class='row'>
+      <div class="col-8">
+        <h2>Welcome {{username}} !</h2>
+          Email: {{email}}
+          <div>
+            <form action="/save-wallet" method="POST" id="wallet_save">
+              Wallet Address : <input type="text" name="wallet_id" placeholder="ETH or BTC">
+              Alias(optional) : <input type="text" name="alias" placeholder="Satoshi's wallet" value="">
+              <input type="submit" value="Save">
+            </form>
+          </div>
+        </div>
+        <div class="col-4">
+          <i class="fab fa-bitcoin fa-3x"></i><h3>1 BTC = $<span id="BTC-rate"></span><i id="indicator3" class="fas"></i></h3>
+        </div>
+      </div>
   </div>
 <hr>
   <div class="container">
     <div class="row">
       <div class="col-sm">
           <h3> My Portfolio Total in USD</h3>
-          <h4>$ <span id="USD-SUM-PROFILE"></span></h4>
+          <h4>$ <span id="USD-SUM-PROFILE"></span><i id="indicator" class="fas"></i></h4>
       </div>
       <div class="col-sm">
           <h3> My Portfolio Total in BTC</h3>
@@ -31,7 +38,7 @@
       </div>
       <div class="col-sm">
           <h3> Running Total in EUR</h3>
-          <h4>€ <span id="EUR-SUM-PROFILE"></span></h4>
+          <h4>€ <span id="EUR-SUM-PROFILE"></span><i id="indicator2" class="fas"></i></h4>
       </div>
       <div class="chart-container col-sm">
           <canvas id="profileCanvas"></canvas>
