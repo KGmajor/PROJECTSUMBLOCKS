@@ -62,6 +62,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     
     handleWallets(wallets);
     
+    
     if (wallets[0][0] === '0') {
     handleETHCoins(ethCoins);
   }
@@ -87,12 +88,15 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
 
       $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
       runningBTCSum += coinCount;
+      doughChart.data.datasets[0].data.push(coinCount);
       currencyExchange(coinName, coinCount, data);
+      doughChart.update();
       }); 
     }
     
     function handleWallets (wallets) {
       if (wallets.length === 0) return;
+      doughChart.data.labels.push(wallets);
       const walletListEl = document.getElementById('wallet_list');
       wallets.forEach((walletAddress) => {
         
@@ -106,7 +110,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
           li.innerHTML = "<a href='/wallet-page/"+walletAddress+"''>" + walletAddress + "</a>"
           walletListEl.appendChild(li);
         }
-        // append it to walletListEl
       });
     };
   }
@@ -122,6 +125,8 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       let btcRate = data.BTC;
       let coinBTCSum = coinCount * btcRate;
       runningBTCSum += coinBTCSum;
+      doughChart.data.datasets[0].data.push(coinBTCSum);
+      doughChart.update();
     };
     if (data.EUR != null){
       let eurRate = data.EUR;
@@ -185,7 +190,34 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       document.getElementById("indicator3").className += (" fa-angle-down");
     }
   }
-     
+
+  function addChartData(chart, wallets, dataIN, dataOut) {
+    barChartData.labels.push(wallets);
+    barChartData.datasets[0].data.push(dataIN);
+    barChartData.datasets[1].data.push(dataOut);
+    chart.update();
+  }
+
+var ctx = document.getElementById('doughnut-chart').getContext('2d');
+var doughChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: "Amount in BTC",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: []
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Wallets in my Portfolio'
+      }
+    }
+});     
 handleFormSubmission();
 getInstantRates();
 
