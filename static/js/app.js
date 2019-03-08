@@ -62,7 +62,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     
     handleWallets(wallets);
     
-    
     if (wallets[0][0] === '0') {
     handleETHCoins(ethCoins);
   }
@@ -88,15 +87,12 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
 
       $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR', function(data){
       runningBTCSum += coinCount;
-      doughChart.data.datasets[0].data.push(coinCount);
       currencyExchange(coinName, coinCount, data);
-      doughChart.update();
       }); 
     }
     
     function handleWallets (wallets) {
       if (wallets.length === 0) return;
-      doughChart.data.labels.push(wallets);
       const walletListEl = document.getElementById('wallet_list');
       wallets.forEach((walletAddress) => {
         
@@ -125,8 +121,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       let btcRate = data.BTC;
       let coinBTCSum = coinCount * btcRate;
       runningBTCSum += coinBTCSum;
-      doughChart.data.datasets[0].data.push(coinBTCSum);
-      doughChart.update();
     };
     if (data.EUR != null){
       let eurRate = data.EUR;
@@ -162,6 +156,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     document.getElementById("USD-SUM").innerHTML = runningUSDSum.numberFormat(2);
     document.getElementById("BTC-SUM").innerHTML = runningBTCSum.numberFormat(8);
     document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
+    refreshChart(runningUSDSum);
   }
 
   function refreshRates () {
@@ -172,6 +167,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
         console.log(data)
         let coinName = 'BTC'
         refreshExchange(coinName, runningBTCSum, data)
+
         console.log('refreshing rates!')
         console.log(runningBTCSum)
     });
@@ -190,34 +186,39 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       document.getElementById("indicator3").className += (" fa-angle-down");
     }
   }
+function refreshChart(runningUSDSum) {
+  let now = new Date();
+  let nowTime = now.toLocaleTimeString();
+  myChart.data.labels.push(nowTime);
+  myChart.data.datasets[0].data.push(runningUSDSum);
+  myChart.update();
+}
 
-  function addChartData(chart, wallets, dataIN, dataOut) {
-    barChartData.labels.push(wallets);
-    barChartData.datasets[0].data.push(dataIN);
-    barChartData.datasets[1].data.push(dataOut);
-    chart.update();
-  }
-
-var ctx = document.getElementById('doughnut-chart').getContext('2d');
-var doughChart = new Chart(ctx, {
-    type: 'doughnut',
+var ctx = document.getElementById('myChart').getContext("2d")
+var myChart = new Chart(ctx, {
+  type: 'line',
     data: {
       labels: [],
       datasets: [
         {
-          label: "Amount in BTC",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          label: "Value",
+          borderColor: "#80b6f4",
+          pointBorderColor: "#80b6f4",
+          pointBackgroundColor: "#80b6f4",
+          pointHoverBackgroundColor: "#80b6f4",
+          pointHoverBorderColor: "#80b6f4",
+          pointBorderWidth: 10,
+          pointHoverRadius: 10,
+          pointHoverBorderWidth: 1,
+          pointRadius: 3,
+          fill: false,
+          borderWidth: 4,
           data: []
         }
       ]
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Wallets in my Portfolio'
-      }
     }
-});     
+  });
+
 handleFormSubmission();
 getInstantRates();
 
