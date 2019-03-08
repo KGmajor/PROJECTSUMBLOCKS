@@ -55,6 +55,82 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     });
   }
   
+  function getHistoricalRates() {
+    let now = new Date();
+    getRateMonthAgo(now);
+    getRateYearAgo(now);
+    getRate5YearsAgo(now);
+
+    function getRateMonthAgo (now) {
+      let day = now.getUTCMonth();
+      let month = now.getUTCMonth() - 1;
+      let year = now.getUTCFullYear();
+      if (month < 10){
+        month = '0' + month;
+      } 
+      if (day < 10){
+        day = '0' + day;
+      }
+
+      let date = `${year}-${month}-${day}`;
+      $.get('https://api.coindesk.com/v1/bpi/historical/close.json?start='+date+'&end=' + date, function(data){
+        let monthResults = data;
+        let monthRate = monthResults.slice(21, 28);
+
+        let monthConversion = parseInt(monthRate) * runningBTCSum;
+        document.getElementById("one-month-rate").innerHTML = monthConversion.numberFormat(2);
+        console.log("Results 1 month", monthResults);  
+    });
+  }
+
+    function getRateYearAgo (now) {
+      let day = now.getUTCMonth();
+      let month = now.getUTCMonth();
+      let year = now.getUTCFullYear() -1;
+      if (month < 10){
+        month = '0' + month;
+      } 
+      if (day < 10){
+        day = '0' + day;
+      }
+
+      let date = `${year}-${month}-${day}`;
+      $.get('https://api.coindesk.com/v1/bpi/historical/close.json?start='+date+'&end=' + date, function(data){
+        let yearResults = data;
+        let yearRate = yearResults.slice(21, 28);
+
+        let yearConversion = parseInt(yearRate) * runningBTCSum;
+        document.getElementById("one-year-rate").innerHTML = yearConversion.numberFormat(2);
+        
+        console.log("Results 1 year", yearResults);  
+    });
+
+  }
+    function getRate5YearsAgo (now) {
+      let day = now.getUTCMonth();
+      let month = now.getUTCMonth();
+      let year = now.getUTCFullYear() - 5;
+      if (month < 10){
+        month = '0' + month;
+      } 
+      if (day < 10){
+        day = '0' + day;
+      }
+
+      let date = `${year}-${month}-${day}`;
+      $.get('https://api.coindesk.com/v1/bpi/historical/close.json?start='+date+'&end=' + date, function(data){
+        let fiveYResults = data;
+        let fiveYRate = fiveYResults.slice(21, 28);
+
+        let fiveYConversion = parseInt(fiveYRate) * runningBTCSum;
+        document.getElementById("five-year-rate").innerHTML = fiveYConversion.numberFormat(2);
+        
+        console.log("Results 5 year", fiveYResults);  
+    });
+  }
+}
+
+  
   function handleJsonResponse (results) {
     const wallets = results.wallets;
     const ethCoins = results.eth_coins.eth_coins;
@@ -157,6 +233,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     document.getElementById("BTC-SUM").innerHTML = runningBTCSum.numberFormat(8);
     document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
     refreshChart(runningUSDSum);
+    getHistoricalRates();
   }
 
   function refreshRates () {
