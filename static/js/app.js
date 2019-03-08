@@ -190,34 +190,99 @@ function refreshChart(runningUSDSum) {
   let now = new Date();
   let nowTime = now.toLocaleTimeString();
   myChart.data.labels.push(nowTime);
-  myChart.data.datasets[0].data.push(runningUSDSum);
+
+  let formatSum = runningUSDSum.toFixed(2);
+  myChart.data.datasets[0].data.push(formatSum);
   myChart.update();
 }
 
-var ctx = document.getElementById('myChart').getContext("2d")
-var myChart = new Chart(ctx, {
-  type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: "Value",
-          borderColor: "#80b6f4",
-          pointBorderColor: "#80b6f4",
-          pointBackgroundColor: "#80b6f4",
-          pointHoverBackgroundColor: "#80b6f4",
-          pointHoverBorderColor: "#80b6f4",
-          pointBorderWidth: 10,
-          pointHoverRadius: 10,
-          pointHoverBorderWidth: 1,
-          pointRadius: 3,
-          fill: false,
-          borderWidth: 4,
-          data: []
+
+
+let ctx = document.getElementById("myChart").getContext('2d');
+
+var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+gradientStroke.addColorStop(0, "#C55774");
+gradientStroke.addColorStop(1, "#170C14");
+
+var gradientBkgrd = ctx.createLinearGradient(0, 100, 0, 400);
+gradientBkgrd.addColorStop(.5, "white");
+
+let draw = Chart.controllers.line.prototype.draw;
+Chart.controllers.line = Chart.controllers.line.extend({
+    draw: function() {
+        draw.apply(this, arguments);
+        let ctx = this.chart.chart.ctx;
+        let _stroke = ctx.stroke;
+        ctx.stroke = function() {
+            ctx.save();
+            //ctx.shadowColor = 'rgba(244,94,132,0.8)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 6;
+            _stroke.apply(this, arguments)
+            ctx.restore();
         }
-      ]
     }
-  });
+});
+
+
+
+
+var myChart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: [],
+        datasets: [{
+            label: "Value in USD",
+            backgroundColor: gradientBkgrd,
+            borderColor: gradientStroke,
+            data: [],
+            pointBorderColor: "rgba(255,255,255,0)",
+            pointBackgroundColor: "#C4FBFB",
+            pointBorderWidth: 0,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: gradientStroke,
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 4,
+            pointRadius: 0,
+            borderWidth: 5,
+            pointHitRadius: 16,
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      tooltips: {
+        backgroundColor:'#fff',
+        displayColors:false,
+           titleFontColor: '#000',
+        bodyFontColor: '#000'
+        
+        },      
+      legend: {
+            display: false
+      },
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display:false
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    maxTicksLimit: 11,
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return '$' +(value.numberFormat(2));
+                    }
+                }
+            }],
+        }
+    }
+});
 
 handleFormSubmission();
 getInstantRates();
