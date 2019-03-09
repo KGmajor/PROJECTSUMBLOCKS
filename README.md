@@ -19,6 +19,7 @@ Sum Blocks is made possible by several open-source products and API's:
 * [CryptoCompare](https://min-api.cryptocompare.com) - The best price conversion api for cryptocurrency.
 * [Etherscan](https://etherscan.io) - API for ERC-20 blockchain exploration. 
 * [Blockchain Explorer](https://blockchain.info) - API for Bitcoin blockchain exploration.
+* [Coindesk](https://www.coindesk.com/api) - Historical Bitcoin rate API.
 * [Bootstrap](getbootstrap.com) - Making the frontend look amazing.
 * [Flask](http://flask.pocoo.org/) - For all your framework needs.
 * [Python](https://www.python.org/) - Working the server-side.
