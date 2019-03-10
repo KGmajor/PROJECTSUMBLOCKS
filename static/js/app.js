@@ -176,10 +176,10 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
 
         if (sessionStorage.getItem(walletAddress) != '') {
           enteredAlias = sessionStorage.getItem(walletAddress);
-          li.innerHTML = "<a href='/wallet-page/"+walletAddress+"''>" + enteredAlias + "</a>"
+          li.innerHTML = "<a class='list-group-item' href='/wallet-page/"+walletAddress+"''>" + enteredAlias + "</a>"
           walletListEl.appendChild(li);
       } else {
-          li.innerHTML = "<a href='/wallet-page/"+walletAddress+"''>" + walletAddress + "</a>"
+          li.innerHTML = "<a class='list-group-item' href='/wallet-page/"+walletAddress+"''>" + walletAddress + "</a>"
           walletListEl.appendChild(li);
         }
       });

@@ -15,6 +15,30 @@
 </head>
 
 <body>
+  <!-- Image and text -->
+<div class="container-fluid">
+  <nav class="navbar navbar-light ">
+    
+    <div class="col-6">
+      <a class="navbar-brand" href="/">
+        <img src="/static/images/web/png/colorfornav.png" width="100" height="145" class="d-inline-block align-top" alt="">
+      </a>
+    </div>
+      <div class="navbar-nav">
+        <div class="col">
+          <button type="button" class="btn btn-outline-info" href="/login-form" id="logged">Login</button>
+        </div>
+        <div class="col">
+          <button href="/add-user" id="registration" type="button" class="btn btn-outline-info">Sign Up</button>
+        </div>
+        <div class="col">
+          <button href="/FAQ" id="faq" type="button" class="btn btn-outline-info">FAQ</button>
+        </div>
+      </div>
+    </div>
+    
+  </nav>
+</div>
   
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -31,11 +55,6 @@
   {% endwith %}
   </div>
   </div>
-  <div>
-  <a href="/login-form" id="logged">Login</a>
-  <a href="/add-user" id="registration">Sign Up</a>
-  </div>
-  <hr>
 
   {% block content %}
 

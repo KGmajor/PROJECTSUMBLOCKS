@@ -3,71 +3,99 @@
 
       <div class="container-fluid">
         <div class="row" id="wallet_add">
+          <div class="col">
           <div class="alert alert-danger d-none" role="alert" id="error_alert">
             <strong>Oh snap!</strong>You already entered that address!
           </div>
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8">
-                  <form action="/wallet-processing" method="GET" id="wallet_add">
-                    Wallet Address : <input type="text" id="wallet_id" placeholder="ETH or BTC">
-                    Alias(optional) : <input type="text" id="alias" placeholder="Satoshi's wallet" value="">
-                    <input type="submit" value="Add wallet">
-                    <form action="/">
-                      <input type="submit" value="I'm finished" />
+
+          <div class="row">
+            <div class="col">
+              <div class="card text-center border-0">
+                <div class="card-body">
+                  <div class="form-group">
+                    <form action="/wallet-processing" method="GET" id="wallet_add">
+                      <label for="walletInput">Wallet Address:</label>
+                      <input type="text" id="wallet_id" placeholder="ETH or BTC">
+                      <label for="aliasInput">Alias (optional)</label>
+                      <input type="text" id="alias" placeholder="Satoshi's wallet" value="">
+                      <input type="submit" value="Add wallet">
+                      <form action="/">
+                        <input type="submit" value="I'm finished" />
+                      </form>
                     </form>
-                  </form>
-                </div>
-                <div class="col-4">
-                  <i class="fab fa-bitcoin fa-3x"></i><h3>1 BTC = $<span id="BTC-rate"></span><i id="indicator3" class="fas"></i></h3>
+                    <div class="row">
+                      <div class="col-md-4 col-md-offset-4"></div>
+                        <i class="fab fa-bitcoin fa-2x"></i><h5>1 BTC = $<span id="BTC-rate"></span><i id="indicator3" class="fas"></i></h5>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          <hr>
+          </div>
+        </div>
+        </div>
       </div>
-      <div class="container-fluid mt-6 d-none" id="wallets_table">
-        <div class="row">
-            <hr> 
-            <div class="col-sm">
-                <h2> Running Total in USD</h2>
-                <h3>$ <span id="USD-SUM"></span><i id="indicator" class="fas"></i></h3>
-            </div>
-            <div class="col-sm">
+
+
+    <div class="container-fluid d-none" id="wallets_table">
+
+      <div class="row">
+        <div class="col-4 " id="sidebar">
+          <div class="list-group">
+            <h2> Wallets Added </h2>
+              <ul class="list-group list-unstyled py-2 text-truncate" id="wallet_list"></ul>
+          </div>
+        </div><!--/span-->
+
+        <div class="col-8">
+          <div class="col text-center">
+                <div>
+                  <!-- Nav tabs -->
+                  <div class="card">
+                  <ul class="nav nav-tabs text-center" role="tablist">
+                      <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Current USD Total</a></li>
+                      <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Total 1mo Ago</a></li>
+                      <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Total 1yr Ago</a></li>
+                      <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Total 5yrs Ago</a></li>
+                  </ul>
+
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active" id="home"><h3>$ <span id="USD-SUM"></span><i id="indicator" class="fas"></i></h3></div>
+                      <div role="tabpanel" class="tab-pane" id="profile"><h3>One Month Ago $<span id="one-month-rate">One month rate</span></h3></div>
+                      <div role="tabpanel" class="tab-pane" id="messages"><h3>One Year Ago $<span id="one-year-rate">One year rate</span></h3></div>
+                      <div role="tabpanel" class="tab-pane" id="settings"><h3>Five Years Ago $<span id="five-year-rate">Five year rate</span></h3></div>
+                  </div>
+                  </div>
+                </div>
+          
+          <div class="row">
+            <div class="col">
+              <canvas id="myChart" width="800" height="450"></canvas>
+              
+            </div><!--/span-->
+          </div><!--/row-->
+        </div><!--/span-->
+      </div><!--/row-->
+    </div>
+  </div>
+        
+
+            <div class="col-sm themed-grid-col">
                 <h2> Running Total in BTC</h2>
                 <h3>BTC: <span id="BTC-SUM"></span></h3>
             </div>
-            <div class="col-sm">
+            <div class="col-sm themed-grid-col">
                 <h2> Running Total in EUR</h2>
                 <h3>€ <span id="EUR-SUM"></span><i id="indicator2" class="fas"></i></h3>
                 <script console.log(runningUSDSum);></script>
             </div>
           </div>
-          <div class="row">
-            <div class="col-6">
-              <h2>  </h2>
-                <ol id="wallet_list"></ol>
-            </div>
-          <div class="row">
-            <div class="col-6">
-              <h2> Wallets Added </h2>
-                <ol id="wallet_list"></ol>
-            </div>
-            <div class="col-6">
-              <h2> Aged Rates </h2>
-                <h4>One Month Ago $<span id="one-month-rate">One month rate</span></h4>
-                <h4>One Year Ago $<span id="one-year-rate">One year rate</span></h4>
-                <h4>Five Years Ago $<span id="five-year-rate">Five year rate</span></h4>
-            </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-6">
-                <canvas id="myChart" width="800" height="450"></canvas>
-              </div>
-            </div>
-          </div>
-
-          </div>
+          
       </div>
+    </div>
+
 
       
       
