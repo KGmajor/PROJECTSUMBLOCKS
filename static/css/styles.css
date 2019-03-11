@@ -21,6 +21,14 @@ body {
 footer {
   padding: 30px 0;
 }
+h2 {
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background: #843F6C;
+    font-size: 22px;
+    padding: 10px;
+}
 
 h3 {
     font-size: 5em;
@@ -28,9 +36,23 @@ h3 {
     text-align: center;
 }
 h4 {
-    font-size: 3em;
+    font-size: 1em;
     font-weight: bold;
     text-align: center;
+    color: gray;
+}
+h5 {
+    font-size: 1.5em;
+    text-align: center;
+    color: #adb5bd;
+    padding-top: 20px;
+}
+h6 {
+    font-size: 1.8rem;
+}
+a {
+    color: black;
+    font-weight: bold;
 }
 label {
     display: inline-block;
@@ -52,7 +74,7 @@ input[type=text] {
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; }
 .nav-tabs > li > a { border: none; color: white; }
 .nav-tabs > li.active > a, .nav-tabs > li > a:hover { border: none; color: white; background: transparent; }
-.nav-tabs > li > a::after { content: ""; background: #4285F4; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
+.nav-tabs > li > a::after { content: ""; background: #54EAF0; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
 .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
 .tab-nav > li > a::after { background: #843F6C none repeat scroll 0% 0%; color: #fff; }
 .tab-pane { padding: 0px 0; }
@@ -65,4 +87,9 @@ input[type=text] {
     color: white !important;
     margin-right: 0em;
     margin-left: 0em;
+}
+.list-group-item:hover {
+    background-color: #C4FBFB;
+    color: black;
+    text-decoration: underline;
 }

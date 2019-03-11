@@ -18,9 +18,9 @@
                       <input type="text" id="wallet_id" placeholder="ETH or BTC">
                       <label for="aliasInput">Alias (optional)</label>
                       <input type="text" id="alias" placeholder="Satoshi's wallet" value="">
-                      <input type="submit" value="Add wallet">
+                      <button class="btn btn-outline-info" type="submit button" value="Add wallet">Add wallet</button>
                       <form action="/">
-                        <input type="submit" value="I'm finished" />
+                        <button class="btn btn-outline-info" type="button" href="/">Reset</button>
                       </form>
                     </form>
                     </div>
@@ -38,9 +38,9 @@
 
       <div class="row">
         <div class="col-4 " id="sidebar">
-          <div class="list-group text-truncate">
+          <div class="card">
             <h2> Wallets Added </h2>
-              <ul class="list-group list-unstyled py-2" id="wallet_list"></ul>
+              <ul class="list-group list-unstyled text-center" id="wallet_list"></ul>
           </div>
         </div>
         <!--First tabbed card-->
@@ -60,7 +60,7 @@
                   <!-- Tab panes -->
                   <div class="tab-content">
                       <div role="tabpanel" class="tab-pane active" id="USD"><h3>$ <span id="USD-SUM"></span><i id="indicator" class="fas"></i></h3></div>
-                      <div role="tabpanel" class="tab-pane" id="BTC"><h3><span id="BTC-SUM"></span>BTC</h3></div>
+                      <div role="tabpanel" class="tab-pane" id="BTC"><h3><span id="BTC-SUM"></span> BTC</h3></div>
                       <div role="tabpanel" class="tab-pane" id="EUR"><h3>€ <span id="EUR-SUM"></span><i id="indicator2" class="fas"></i></h3></div>
                       <div role="tabpanel" class="tab-pane" id="CHART"><canvas id="myChart" width="800" height="450"></canvas></div>
                   </div>
@@ -74,16 +74,16 @@
                   <!-- Nav tabs -->
                   <div class="card">
                   <ul class="nav nav-tabs card-header-tabs">
-                      <li class="nav-item"><a class="nav-link active" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Total 1mo Ago</a></li>
-                      <li class="nav-item"><a class="nav-link" href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Total 1yr Ago</a></li>
-                      <li class="nav-item"><a class="nav-link" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Total 5yrs Ago</a></li>
+                      <li class="nav-item"><a class="nav-link active" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Value 1mo Ago</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Value 1yr Ago</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Value 5yrs Ago</a></li>
                   </ul>
 
                   <!-- Tab panes -->
                   <div class="tab-content">
-                      <div role="tabpanel" class="tab-pane active" id="profile"><h4>One Month Ago $<span id="one-month-rate">One month rate</span></h4></div>
-                      <div role="tabpanel" class="tab-pane" id="messages"><h4>One Year Ago $<span id="one-year-rate">One year rate</span></h4></div>
-                      <div role="tabpanel" class="tab-pane" id="settings"><h4>Five Years Ago $<span id="five-year-rate">Five year rate</span></h4></div>
+                      <div role="tabpanel" class="tab-pane active" id="profile"><h6>One Month Ago $<span id="one-month-rate">One month rate</span></h6></div>
+                      <div role="tabpanel" class="tab-pane" id="messages"><h6>One Year Ago $<span id="one-year-rate">One year rate</span></h6></div>
+                      <div role="tabpanel" class="tab-pane" id="settings"><h6>Five Years Ago $<span id="five-year-rate">Five year rate</span></h6></div>
                   </div>
                   </div>
                 </div>
