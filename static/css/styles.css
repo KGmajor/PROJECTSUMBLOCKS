@@ -89,7 +89,7 @@ input[type=text] {
     margin-left: 0em;
 }
 .list-group-item:hover {
-    background-color: #C4FBFB;
-    color: black;
+    background-color: black;
+    color: white;
     text-decoration: underline;
 }
