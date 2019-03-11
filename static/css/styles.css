@@ -32,19 +32,37 @@ h4 {
     font-weight: bold;
     text-align: center;
 }
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+    font-weight: bold;
+    font-size: 2em;
+}
+input[type=text] {
+  border: none;
+  border-bottom: 2px solid #C55774;
+  padding-right: 20px;
+}
 .navbar {
     margin:0 !important;
     padding: 10px !important;
 }
+.nav-item { color: white; }
+.nav-tabs { border-bottom: 0px solid #DDD; }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; }
+.nav-tabs > li > a { border: none; color: white; }
+.nav-tabs > li.active > a, .nav-tabs > li > a:hover { border: none; color: white; background: transparent; }
+.nav-tabs > li > a::after { content: ""; background: #4285F4; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
+.nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
+.tab-nav > li > a::after { background: #843F6C none repeat scroll 0% 0%; color: #fff; }
+.tab-pane { padding: 0px 0; }
+.tab-content{padding:30px}
 
-.nav-tabs { border-bottom: 2px solid #DDD; }
-    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; }
-    .nav-tabs > li > a { border: none; color: #666; }
-        .nav-tabs > li.active > a, .nav-tabs > li > a:hover { border: none; color: #4285F4 !important; background: transparent; }
-        .nav-tabs > li > a::after { content: ""; background: #4285F4; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
-    .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
-.tab-nav > li > a::after { background: #21527d none repeat scroll 0% 0%; color: #fff; }
-.tab-pane { padding: 1px 0; }
-.tab-content{padding:20px}
-
-.card {background: #FFF none repeat scroll 0% 0%; box-shadow: 0px 3px 6px #C4FBFB; margin-bottom: 30px; }
+.card {background: #FFF none repeat scroll 0% 0%; box-shadow: 2px 3px 6px #C4FBFB; margin-bottom: 30px; }
+.card-header-tabs {
+    background: #843F6C;
+    font-size: 18px !important;
+    color: white !important;
+    margin-right: 0em;
+    margin-left: 0em;
+}

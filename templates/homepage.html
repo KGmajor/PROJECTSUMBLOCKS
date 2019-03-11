@@ -23,10 +23,6 @@
                         <input type="submit" value="I'm finished" />
                       </form>
                     </form>
-                    <div class="row">
-                      <div class="col-md-4 col-md-offset-4"></div>
-                        <i class="fab fa-bitcoin fa-2x"></i><h5>1 BTC = $<span id="BTC-rate"></span><i id="indicator3" class="fas"></i></h5>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -42,9 +38,9 @@
 
       <div class="row">
         <div class="col-4 " id="sidebar">
-          <div class="list-group">
+          <div class="list-group text-truncate">
             <h2> Wallets Added </h2>
-              <ul class="list-group list-unstyled py-2 text-truncate" id="wallet_list"></ul>
+              <ul class="list-group list-unstyled py-2" id="wallet_list"></ul>
           </div>
         </div>
         <!--First tabbed card-->
@@ -53,18 +49,18 @@
                 <div>
                   <!-- Nav tabs -->
                   <div class="card">
-                  <ul class="nav nav-tabs text-center" role="tablist">
-                      <li role="presentation" class="active"><a href="#USD" aria-controls="USD" role="tab" data-toggle="tab">Current USD Total</a></li>
-                      <li role="presentation"><a href="#BTC" aria-controls="BTC" role="tab" data-toggle="tab">Current BTC Total</a></li>
-                      <li role="presentation"><a href="#EUR" aria-controls="EUR" role="tab" data-toggle="tab">Current EUR Total</a></li>
-                      <li role="presentation"><a href="#CHART" aria-controls="CHART" role="tab" data-toggle="tab">CHART</a></li>
+                  <ul class="nav nav-tabs card-header-tabs">
+                      <li class="nav-item"><a class="nav-link active" href="#USD" aria-controls="USD" role="tab" data-toggle="tab">USD Total</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#BTC" aria-controls="BTC" role="tab" data-toggle="tab">BTC Total</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#EUR" aria-controls="EUR" role="tab" data-toggle="tab">EUR Total</a></li>
+                      <li class="nav-item"><a class="nav-link"href="#CHART" aria-controls="CHART" role="tab" data-toggle="tab">Portfolio Chart</a></li>
     
                   </ul>
 
                   <!-- Tab panes -->
                   <div class="tab-content">
                       <div role="tabpanel" class="tab-pane active" id="USD"><h3>$ <span id="USD-SUM"></span><i id="indicator" class="fas"></i></h3></div>
-                      <div role="tabpanel" class="tab-pane" id="BTC"><h3>BTC: <span id="BTC-SUM"></span></h3></div>
+                      <div role="tabpanel" class="tab-pane" id="BTC"><h3><span id="BTC-SUM"></span>BTC</h3></div>
                       <div role="tabpanel" class="tab-pane" id="EUR"><h3>€ <span id="EUR-SUM"></span><i id="indicator2" class="fas"></i></h3></div>
                       <div role="tabpanel" class="tab-pane" id="CHART"><canvas id="myChart" width="800" height="450"></canvas></div>
                   </div>
@@ -77,10 +73,10 @@
                 <div>
                   <!-- Nav tabs -->
                   <div class="card">
-                  <ul class="nav nav-tabs text-center" role="tablist">
-                      <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Total 1mo Ago</a></li>
-                      <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Total 1yr Ago</a></li>
-                      <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Total 5yrs Ago</a></li>
+                  <ul class="nav nav-tabs card-header-tabs">
+                      <li class="nav-item"><a class="nav-link active" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Total 1mo Ago</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Total 1yr Ago</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Total 5yrs Ago</a></li>
                   </ul>
 
                   <!-- Tab panes -->
