@@ -1,57 +1,14 @@
 
 
-// function removeWallet() {
-//   $('#remove_wallet').on('submit', (evt) => {
-//     $.get('/remove-wallet/wallet_address=' + )
-//   })
-// }
 
-function addChartData(chart, wallets, dataIN, dataOut) {
-    barChartData.labels.push(wallets);
-    barChartData.datasets[0].data.push(dataIN);
-    barChartData.datasets[1].data.push(dataOut);
-    chart.update();
+function getWalletInfo () {
+  var x = location.pathname;
+  walletAddress = x.slice(13,);
+  console.log(walletAddress);
+  $.getJSON('http://api.etherscan.io/api?module=account&action=txlist&address='+walletAddress+'&startblock=0&endblock=99999999&sort=asc&apikey=UM3G7VEXIW7YR1EC5D1UCRWF9MUF9EJFF6',
+    function(data) {
+      console.log(data)
+    });
   }
-     
 
-
-  var barChartData = {
-  labels: [],
-  datasets: [{
-    label: 'Money In',
-    backgroundColor: '#1f77b4',
-    data: [
-    ]
-  }, {
-    label: 'Money Out',
-    backgroundColor: '#ff7f0e',
-    data: [
-    ]
-  }]
-};
-
-
-var ctx = document.getElementById('canvas').getContext('2d');
-var walletChart = new Chart(ctx, {
-  type: 'bar',
-  data: barChartData,
-  options: {
-    title: {
-      display: true,
-      text: 'Chart.js Bar Chart - Stacked'
-    },
-    tooltips: {
-      mode: 'index',
-      intersect: false
-    },
-    responsive: true,
-    scales: {
-      xAxes: [{
-        stacked: true,
-      }],
-      yAxes: [{
-        stacked: true
-      }]
-    }
-  }
-});
+getWalletInfo();

@@ -15,13 +15,17 @@
                   <div class="form-group">
                     <form action="/wallet-processing" method="GET" id="wallet_add">
                       <label for="walletInput">Wallet Address:</label>
-                      <input type="text" id="wallet_id" placeholder="ETH or BTC">
+                      <input type="text" id="wallet_id" placeholder="ETH or BTC" size="40">
                       <label for="aliasInput">Alias (optional)</label>
-                      <input type="text" id="alias" placeholder="Satoshi's wallet" value="">
-                      <button class="btn btn-outline-info" type="submit button" value="Add wallet">Add wallet</button>
-                      <form action="/">
-                        <a class="btn btn-outline-info" href="/">Reset</a>
-                      </form>
+                      <input type="text" id="alias" placeholder="Satoshi's wallet" size="40" value="">
+                      <div class="row">
+                        <div class="container">
+                          <button class="btn btn-outline-info" type="submit button" value="Add wallet">Add wallet</button>
+                          <form action="/">
+                          <a class="btn btn-outline-info" href="/">Reset</a>
+                          </form>
+                        </div>
+                      </div>
                     </form>
                     </div>
                   </div>
@@ -74,16 +78,16 @@
                   <!-- Nav tabs -->
                   <div class="card">
                   <ul class="nav nav-tabs card-header-tabs">
-                      <li class="nav-item"><a class="nav-link active" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Value 1mo Ago</a></li>
-                      <li class="nav-item"><a class="nav-link" href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Value 1yr Ago</a></li>
-                      <li class="nav-item"><a class="nav-link" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Value 5yrs Ago</a></li>
+                      <li class="nav-item"><a class="nav-link active" href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fas fa-history"></i> 1mo Ago</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><i class="fas fa-history"></i> 1yr Ago</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><i class="fas fa-history"></i> 5yrs Ago</a></li>
                   </ul>
 
                   <!-- Tab panes -->
                   <div class="tab-content">
-                      <div role="tabpanel" class="tab-pane active" id="profile"><h6>One Month Ago $<span id="one-month-rate">One month rate</span></h6></div>
-                      <div role="tabpanel" class="tab-pane" id="messages"><h6>One Year Ago $<span id="one-year-rate">One year rate</span></h6></div>
-                      <div role="tabpanel" class="tab-pane" id="settings"><h6>Five Years Ago $<span id="five-year-rate">Five year rate</span></h6></div>
+                      <div role="tabpanel" class="tab-pane active" id="profile"><h6>$<span id="one-month-rate">One month rate</span></h6><small>Your portfolio value, about 1 month ago</small></div>
+                      <div role="tabpanel" class="tab-pane" id="messages"><h6>$<span id="one-year-rate">One year rate</span></h6><small>Your portfolio value, about 1 year ago</small></div>
+                      <div role="tabpanel" class="tab-pane" id="settings"><h6>$<span id="five-year-rate">Five year rate</span></h6><small>Your portfolio value, about 5 years ago</small></div>
                   </div>
                   </div>
                 </div>

@@ -46,12 +46,18 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
         };
     })
   }
+  function updateTimeStamp () {
+    let rightNow = new Date();
+    let time = rightNow.toLocaleTimeString();
+    document.getElementById("updated-time").innerHTML = time;
+  }
 
   function getInstantRates () {
   $.getJSON('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR',
     function(data) {
       btcRate = data.USD;
       document.getElementById("BTC-rate").innerHTML = btcRate.numberFormat(2);
+      updateTimeStamp();
     });
   }
   
@@ -234,6 +240,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     document.getElementById("EUR-SUM").innerHTML = runningEURSum.numberFormat(2);
     refreshChart(runningUSDSum);
     getHistoricalRates();
+    updateTimeStamp();
   }
 
   function refreshRates () {
@@ -241,12 +248,10 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
       function(data) {
         btcRate = data.USD;
         document.getElementById("BTC-rate").innerHTML = btcRate.numberFormat(2);
-        console.log(data)
         let coinName = 'BTC'
         refreshExchange(coinName, runningBTCSum, data)
 
         console.log('refreshing rates!')
-        console.log(runningBTCSum)
     });
   }
   setInterval(refreshRates, 30000);
@@ -278,8 +283,10 @@ function refreshChart(runningUSDSum) {
 let ctx = document.getElementById("myChart").getContext('2d');
 
 var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
-gradientStroke.addColorStop(0, "#C55774");
-gradientStroke.addColorStop(1, "#170C14");
+gradientStroke.addColorStop(0, "#020024");
+gradientStroke.addColorStop(0.35, "#085879");
+gradientStroke.addColorStop(1, "#00d4ff");
+
 
 var gradientBkgrd = ctx.createLinearGradient(0, 100, 0, 400);
 gradientBkgrd.addColorStop(.5, "white");

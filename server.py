@@ -88,9 +88,6 @@ def wall_processing_json():
 @app.route('/wallet-page/<wallet_address>')
 def render_wallet_info(wallet_address):
 
-    holdAddress = {}
-    holdAddress[wallet_address] = 1
-    sendAddress = jsonify(holdAddress)
     
     return render_template("wallet-page.html", wallet_address=wallet_address)
 

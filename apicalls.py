@@ -46,8 +46,8 @@ def erc20_address_call(address):
         if v >= 0:
             positive_count_eth[k] += v
     client_response['eth_coins'] = positive_count_eth
-    # client_response['tx_in'] = transactions_in
-    # client_response['tx_out'] = transactions_out
+    client_response['tx_in'] = transactions_in
+    client_response['tx_out'] = transactions_out
     print('*************', positive_count_eth)
     
     return client_response
@@ -72,8 +72,8 @@ def btc_address_call(address):
     
 
     btc_token_totals['BTC'] += float(btc_decimal)
-    # btc_token_totals['tx_in'] = received
-    # btc_token_totals['tx_out'] = sent
+    btc_token_totals['tx_in'] = received
+    btc_token_totals['tx_out'] = sent
 
     return btc_token_totals
     
