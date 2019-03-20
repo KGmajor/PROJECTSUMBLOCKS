@@ -3,7 +3,7 @@
 
 Sum Blocks is a cryptocurrency wallet aggregator, that pulls both Ethereum and Bitcoin based wallet data and returns $USD/EUR sums for the wallets. 
 
-![Sum_Blocks Intro](https://raw.githubusercontent.com/kgmajor/projectsumblocks/master/screenshot)
+![Sum_Blocks Intro](https://raw.githubusercontent.com/kgmajor/projectsumblocks/master/screenshot.png)
 
 ### New Features!
 
