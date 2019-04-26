@@ -31,6 +31,7 @@ def index():
 
 @app.route('/profile_wallets.json', methods=['GET'])
 def user_wallets():
+    """Json response to saved wallets under a user's profile."""
     user_id = session['userid']
     
 
@@ -51,7 +52,7 @@ def user_wallets():
 
 @app.route('/wallet-processing.json', methods=['GET'])
 def wall_processing_json():
-    # """Handling the wallet address input"""
+    """Handling the wallet address input"""
     address = request.args.get('wallet_id') # TODO persist the wallet address for the user. 
     
     
@@ -87,12 +88,13 @@ def wall_processing_json():
 
 @app.route('/wallet-page/<wallet_address>')
 def render_wallet_info(wallet_address):
-
+    """The wallet information details page. """
     
     return render_template("wallet-page.html", wallet_address=wallet_address)
 
 @app.route('/remove-wallet/<wallet_address>')
 def remove_wallet(wallet_address):
+    """Removing a saved wallet from a users database entry"""
     user_id = session['userid']
     to_remove = wallet_address
     remove_wallet = Wallet.query.filter_by(wallet_address == to_remove, user_id == user_id).first()
@@ -107,11 +109,12 @@ def remove_wallet(wallet_address):
 
 @app.route('/add-user')
 def add_a_user():
-
+    """Render the sign-up page."""
     return render_template("add-user.html")
 
 @app.route('/add-user-processing', methods=['POST'])
 def adding_user():
+    """Processing the user information and adding them to psql database"""
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
@@ -134,6 +137,7 @@ def adding_user():
 
 @app.route('/profile-page/')
 def render_user_profile():
+    """Render the user's profile page"""
     user_id = session['userid']
     user = User.query.get(user_id)
     username = user.username
@@ -148,6 +152,7 @@ def render_user_profile():
 
 @app.route('/save-wallet', methods=['POST'])
 def save_wallet():
+    """Save a wallet to a user's profile in the database"""
     wallet_address = request.form.get('wallet_id')
     
     wallet_alias = request.form.get('alias')
@@ -165,10 +170,12 @@ def save_wallet():
 
 @app.route('/login-form')
 def show_login_form():
+    """Render the login form"""
     return render_template('login-form.html')
 
 @app.route('/login-form', methods=['POST'])
 def log_user_in():
+    """Form handling for the user to login."""
     email = request.form.get('email')
     password = request.form.get('password')
     usersMatchList = User.query.filter_by(email = email).all()
@@ -196,6 +203,7 @@ def log_user_in():
 
 @app.route('/logout', methods=['GET'])
 def log_user_out():
+    """Logging the user out of the session and redirect to homepage"""
     session['logged_in'] = False
     flash('You were successfully logged out.')
     return redirect('/')
