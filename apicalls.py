@@ -7,6 +7,10 @@ import os
 ETHERSCAN_KEY = os.environ["ETHERSCAN_KEY"]
 
 def erc20_address_call(address):
+    """API call to etherscan for an ethereum wallet
+        and returns the total positive count of remaining erc-20 coins 
+        in the wallet"""
+
     address = str(address)
     url = "http://api.etherscan.io/api?module=account&action=tokentx&address=" + address + \
       "&startblock=0&endblock=999999999&sort=asc&apikey=" + ETHERSCAN_KEY
@@ -55,6 +59,9 @@ def erc20_address_call(address):
 
 
 def btc_address_call(address):
+    """API call to blockchain.info for bitcoin wallets
+        returns the total amount of remaining bitcoin, if positive"""
+    
     address = str(address)
     url = "https://blockchain.info/rawaddr/" + address 
     btc_token_totals = defaultdict(lambda : 0)
@@ -79,7 +86,7 @@ def btc_address_call(address):
     
 
 def erc20_value_search(coins):
-        
+        """An API call to Binance for coin converstion rates"""
         url2 = "http://api.binance.com/api/v3/ticker/price"
         response2 = requests.get(url2)
         rate_list = response2.json()
@@ -97,7 +104,7 @@ def erc20_value_search(coins):
         return pair_conversions
 
 def btc_eth_toUSD():
-
+    """An API call to cryptocompare.com for BTC and ETH conversions to USD"""
     url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD"
     response = requests.get(url)
     btceth_usd = response.json()
